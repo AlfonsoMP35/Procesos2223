@@ -10,11 +10,39 @@ function Juego(){
         }
     }
 
+    this.eliminarUsuario=function(nick){
+        delete this.usuarios[nick];
+    }
+
     this.crearPartida=function(nick){
         //obtener código único
         //crear la partida con propietario nick
         //devolver el código
-        console.log("partida creada");
+        let codigo=Date.now();
+        this.partidas[codigo]=new Partida(codigo, nick);
+        return codigo;
+    }
+
+    this.unirseAPartida=function(codigo,nick){
+        if(this.partidas[codigo]){
+            this.partidas[codigo].agregarJugador(nick);
+        }
+        else{
+            console.log("La partida no existe")
+        }
+    }
+
+    this.obtenerPartidas=function(){
+        let lista;
+        
+        for(let key in this.partidas){ //for(i=0;i++;i<this.partidas.lenght;)
+            lista.push({codigo:key, owner:this.partidas[codigo].owner})
+        }
+        return lista;
+    }
+
+    this.obtenerPartidasDisponibles=function(){
+        //devolver sólo las partidas sin completar
     }
 
     
@@ -26,15 +54,32 @@ function Usuario(nick,juego){
     this.juego=juego;  //Usuario conoce la clase Juego
 
     this.crearPartida=function(){
-        this.juego.crearPartida(this.nick)
+        return this.juego.crearPartida(this.nick)
+    }
+
+    this.unirAPartida=function(codigo){
+        this.juego.unirAPartida(codigo, this.nick)
+
     }
 
 }
 
 
 //CREACIÓN DE LA PARTIDA
-function Partida(){
-    this.codigo;
+function Partida(codigo, nick){
+    this.codigo=codigo;
+    this.owner=nick;
+    this.jugadores=[];
+    this.fase="inicial"; //new Inicial()
 
+    this.agregarJugador=function(nick){
+        if (this.jugadores.length<2){
+            this.jugadores.push(nick);
+        }
+    }
+
+    this.agregarJugador=function(nick){
+        
+    }
 
 }
