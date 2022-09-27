@@ -18,10 +18,19 @@ describe("Player", function() {
 
   });
 
-  it("obtener partida", function() {    
-    partida=miJuego.crearPartida("pepe");
-    let lista=miJuego.obtenerPartidas();
-    expect(lista.length).toEqual(1);
+  it("obtener partida", function() {  
+    
+    let codigo=usr1.crearPartida();
+    expect(miJuego.partidas[codigo].toEqual(1));
+    let partida=miJuego.partidas[codigo];
+    expect(partida.owner.nick).toEqual(usr1.nick);
+    expect(partida.jugadores[0].nick).toEqual(usr.nick);
+    expect(partida.codigo).toEqual(codigo);
+
+  });
+
+  it("el usuario luis se une a la partida", function() {
+
 
   });
 

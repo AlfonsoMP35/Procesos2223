@@ -2,7 +2,7 @@
 //CREACIÓN DEL JUEGO
 function Juego(){
     this.partidas={}; //Diccionario (asociación clave-valor) this.partidas=[];
-    this.usuarios={}; //array asociativo
+    this.usuarios={}; 
 
     this.agregarUsuario=function(nick){
         if (!this.usuarios[nick]){
@@ -14,18 +14,18 @@ function Juego(){
         delete this.usuarios[nick];
     }
 
-    this.crearPartida=function(nick){
+    this.crearPartida=function(usr){
         //obtener código único
         //crear la partida con propietario nick
         //devolver el código
         let codigo=Date.now();
-        this.partidas[codigo]=new Partida(codigo, nick);
+        this.partidas[codigo]=new Partida(codigo, usr);
         return codigo;
     }
 
-    this.unirseAPartida=function(codigo,nick){
+    this.unirseAPartida=function(codigo,usr){
         if(this.partidas[codigo]){
-            this.partidas[codigo].agregarJugador(nick);
+            this.partidas[codigo].agregarJugador(usr);
         }
         else{
             console.log("La partida no existe")
@@ -54,11 +54,11 @@ function Usuario(nick,juego){
     this.juego=juego;  //Usuario conoce la clase Juego
 
     this.crearPartida=function(){
-        return this.juego.crearPartida(this.nick)
+        return this.juego.crearPartida(this)
     }
 
     this.unirAPartida=function(codigo){
-        this.juego.unirAPartida(codigo, this.nick)
+        this.juego.unirAPartida(codigo, this);
 
     }
 
@@ -66,20 +66,21 @@ function Usuario(nick,juego){
 
 
 //CREACIÓN DE LA PARTIDA
-function Partida(codigo, nick){
+function Partida(codigo, usr){
     this.codigo=codigo;
-    this.owner=nick;
+    this.owner=usr;
     this.jugadores=[];
     this.fase="inicial"; //new Inicial()
 
-    this.agregarJugador=function(nick){
+    this.agregarJugador=function(usr){
         if (this.jugadores.length<2){
-            this.jugadores.push(nick);
+            this.jugadores.push(usr);
+        }
+        else {
+            console.log("La partida esta completa");
         }
     }
 
-    this.agregarJugador=function(nick){
-        
-    }
+    this.agregarJugador(this.owner);
 
 }
