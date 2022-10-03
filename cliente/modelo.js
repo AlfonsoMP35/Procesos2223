@@ -5,13 +5,29 @@ function Juego(){
     this.usuarios={}; 
 
     this.agregarUsuario=function(nick){
+        let res={nick:-1};
         if (!this.usuarios[nick]){
             this.usuarios[nick]=new Usuario(nick,this);
+            res={nick:nick};
+            console.log("Nuevo usuario: " +nick);
         }
+        return res;
     }
 
     this.eliminarUsuario=function(nick){
         delete this.usuarios[nick];
+    }
+
+    this.jugadorCreaPartida=function(nick){
+        let usr = this.usuarios[nick]; //Juego.obtenerUsuario(nick)
+        let res = {codigo:-1};
+        let codigo;
+      
+        if(usr){
+          codigo = usr.crearPartida();
+          res={codigo:codigo};         
+        }
+        return res;
     }
 
     this.crearPartida=function(usr){
@@ -84,3 +100,5 @@ function Partida(codigo, usr){
     this.agregarJugador(this.owner);
 
 }
+
+module.exports.Juego = Juego; //Super objeto

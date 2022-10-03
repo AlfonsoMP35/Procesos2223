@@ -6,8 +6,8 @@ describe("Player", function() {
     miJuego=new Juego();
     miJuego.agregarUsuario("pepe");
     miJuego.agregarUsuario("luis");
-    usr1=miJuego.usuarios("pepe");
-    usr2=miJuego.usuarios("luis");
+    usr1=miJuego.usuarios["pepe"];
+    usr2=miJuego.usuarios["luis"];
   });
 
   it("inicialmente", function() {
