@@ -21,12 +21,11 @@ function Juego(){
     this.jugadorCreaPartida=function(nick){
         let usr = this.usuarios[nick]; //Juego.obtenerUsuario(nick)
         let res = {"codigo":-1};
-        let codigo;
       
         if(usr){
-          //let codigo = usr.crearPartida();
-          let codigo = this.crearPartida(usr);
-          res={"codigo":codigo};         
+          let codigo = usr.crearPartida();
+          //let codigo = this.crearPartida(usr);
+          res={codigo:codigo};         
         }
         return res;
     }
@@ -36,28 +35,29 @@ function Juego(){
         //crear la partida con propietario nick
         //devolver el código
         let codigo=Date.now();
+        console.log("Usuario "+usr.nick+ " crea partida "+codigo);
         this.partidas[codigo]=new Partida(codigo, usr);
         return codigo;
     }
 
     this.unirseAPartida=function(codigo,usr){
+        let res=-1;
         if(this.partidas[codigo]){
-            this.partidas[codigo].agregarJugador(usr);
-            console.log(usr.nick + "se ha unido a la partida de codigo: " +codigo);
+            res = this.partidas[codigo].agregarJugador(usr);
         }
         else{
             console.log("La partida no existe")
         }
+        return res;
     }
 
     this.jugadorSeUneAPartida=function(nick,codigo){
         let usr = this.usuarios[nick];
         let res = {"codigo":-1};
-        let codigo;
       
         if(usr){
-          //let valor = usr.unirseAPartida(codigo);
-          let valor = this.unirseAPartida(codigo,usr);
+          let valor = usr.unirseAPartida(codigo);
+          //let valor = this.unirseAPartida(codigo,usr);
           res={"codigo":valor};         
         }
         return res;
@@ -68,7 +68,7 @@ function Juego(){
         let lista;
         
         for(let key in this.partidas){ //for(i=0;i++;i<this.partidas.lenght;)
-            lista.push({"codigo":key, owner:this.partidas[codigo].owner})
+            lista.push({"codigo":key, "owner":this.partidas[codigo].owner})
         }
         return lista;
     }
@@ -79,7 +79,7 @@ function Juego(){
         
         for(let key in this.partidas){ 
             if (this.partidas.jugadores.length < 2){
-                lista.push({"codigo":key, owner:this.partidas[codigo].owner});
+                lista.push({"codigo":key, "owner":this.partidas[codigo].owner});
             }
         }
         return lista;
@@ -113,6 +113,7 @@ function Partida(codigo, usr){
     this.fase="inicial"; //new Inicial()
 
     this.agregarJugador=function(usr){
+        let res=this.codigo;
         if (this.jugadores.length<2){
             this.jugadores.push(usr);
             console.log(usr.nick + "se ha unido a la partida");
@@ -124,6 +125,11 @@ function Partida(codigo, usr){
         return res;
     }
 
+    this.hayHueco=function(){
+        return (this.jugadores.length<2);
+    }
+
+    
     this.agregarJugador(this.owner);
 
 }
