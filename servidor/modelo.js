@@ -5,10 +5,10 @@ function Juego(){
     this.usuarios={}; 
 
     this.agregarUsuario=function(nick){
-        let res={nick:-1};
+        let res={"nick":-1};
         if (!this.usuarios[nick]){
             this.usuarios[nick]=new Usuario(nick,this);
-            res={nick:nick};
+            res={"nick":nick};
             console.log("Nuevo usuario: " +nick);
         }
         return res;
@@ -111,10 +111,11 @@ function Partida(codigo, usr){
     this.owner=usr;
     this.jugadores=[];
     this.fase="inicial"; //new Inicial()
+    this.maxJugadores = 2;
 
     this.agregarJugador=function(usr){
         let res=this.codigo;
-        if (this.jugadores.length<2){
+        if (this.hayHueco()){
             this.jugadores.push(usr);
             console.log(usr.nick + "se ha unido a la partida");
         }
@@ -125,11 +126,17 @@ function Partida(codigo, usr){
         return res;
     }
 
-    this.hayHueco=function(){
-        return (this.jugadores.length<2);
+    this.comprobarFase=function(){
+        if (!this.hayHueco()){
+            this.fase="jugando";
+        }
     }
 
-    
+    this.hayHueco=function(){
+        return (this.jugadores.length< this.maxJugadores);
+    }
+
+
     this.agregarJugador(this.owner);
 
 }

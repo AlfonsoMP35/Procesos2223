@@ -32,7 +32,7 @@ app.get("/agregarUsuario/:nick",function(request,response){
 app.get("/crearPartida/:nick",function(request,response){
   let nick = request.params.nick;
   let res = juego.jugadorCreaPartida(nick);
-  response.send(res);
+  response.send(res); //Conecta con el clienteRes y res pasa a llamarse data en la otra clase
 });
 
 app.get("/unirseAPartida/:nick/:codigo",function(request,response){
