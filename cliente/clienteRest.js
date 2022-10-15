@@ -7,14 +7,16 @@ function ClienteRest(){
 			console.log(data);
 			if (data.nick!=-1){
                 console.log("Usuario " + data.nick + " registrado");
+				cli.nick=data.nick;
 				//ws.nick=data.nick;
 				//$.cookie("nick",ws.nick);
-				//iu.mostrarHome(data);
+				cli.obtenerListaPartidas();
+				iu.mostrarHome();//iu.mostrarHome(data.nick)
 			}
 			else{
                 console.log("No se ha podido registrar el usuario");
 				//iu.mostrarModal("El nick ya está en uso");
-				//iu.mostrarAgregarJugador();
+				iu.mostrarAgregarJugador();
 			}
 		});
 
@@ -24,13 +26,15 @@ function ClienteRest(){
 
     this.crearPartida=function(nick){
 		var cli=this;
+		let nick=cli.nick;
 		$.getJSON("/crearPartida/"+nick,function(data){  //Conexión con el API REST
 			//se ejecuta cuando conteste el servidor
             this.nick = nick;
             
 			console.log(data);
-			if (data.nick!=-1){
+			if (data.codigo!=-1){
                 console.log(nick + " ha creado una partida. Codigo de la partida: " + data.codigo );
+				iu.mostrarCodigo(data.codigo);
 				//ws.nick=data.nick;
 				//$.cookie("nick",ws.nick);
 				//iu.mostrarHome(data);
@@ -49,11 +53,11 @@ function ClienteRest(){
 		var cli=this;
 		$.getJSON("/unirseAPartida/"+nick+"/"+codigo,function(data){  //Conexión con el API REST
 			//se ejecuta cuando conteste el servidor
-            this.nick = nick;
-            this.codigo = codigo;
+           /* this.nick = nick;
+            this.codigo = codigo;*/
             
 			console.log(data);
-			if (data.nick!=-1){
+			if (data.codigo!=-1){
                 console.log(nick + " se ha unido a la partida. Codigo: " + data.codigo );
 				//ws.nick=data.nick;
 				//$.cookie("nick",ws.nick);
@@ -66,6 +70,15 @@ function ClienteRest(){
 			}
 		});
 
+	}
+
+	this.obtenerListaPartidas=function(){
+		let cli=this;
+		//obtenerPartidasDisponibles
+		$.getJSON("/obtenerPartidas",function(lista){
+			console.log(lista);
+			iu.mostrarListaDePartidas(lista);
+		});
 	}
 
 }

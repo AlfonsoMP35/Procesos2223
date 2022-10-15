@@ -43,13 +43,13 @@ app.get("/unirseAPartida/:nick/:codigo",function(request,response){
 });
 
 app.get("/obtenerPartidas", function(request, response){
-  let res = juego.obtenerPartidas();
-  response.send(res);
+  let lista = juego.obtenerPartidas();
+  response.send(lista);
 });
 
 app.get("/obtenerPartidasDisponibles", function(request, response){
-  let res = juego.obtenerPartidasDisponibles();
-  response.send(res);
+  let lista = juego.obtenerPartidasDisponibles();
+  response.send(lista);
 });
 
 
