@@ -24,7 +24,7 @@ function ClienteRest(){
         //Lo que pongas aqui se ejecuta a la vez que la llamada
 	}
 
-    this.crearPartida=function(nick){
+    this.crearPartida=function(){
 		var cli=this;
 		let nick=cli.nick;
 		$.getJSON("/crearPartida/"+nick,function(data){  //Conexión con el API REST
@@ -49,16 +49,17 @@ function ClienteRest(){
 	}
 
 
-    this.unirseAPartida=function(nick,codigo){
+    this.unirseAPartida=function(codigo){
 		var cli=this;
-		$.getJSON("/unirseAPartida/"+nick+"/"+codigo,function(data){  //Conexión con el API REST
+		$.getJSON("/unirseAPartida/"+cli.nick+"/"+codigo,function(data){  //Conexión con el API REST
 			//se ejecuta cuando conteste el servidor
            /* this.nick = nick;
             this.codigo = codigo;*/
             
 			console.log(data);
 			if (data.codigo!=-1){
-                console.log(nick + " se ha unido a la partida. Codigo: " + data.codigo );
+                console.log(cli.nick + " se ha unido a la partida. Codigo: " + data.codigo );
+				iu.mostrarCodigo(data.codigo);
 				//ws.nick=data.nick;
 				//$.cookie("nick",ws.nick);
 				//iu.mostrarHome(data);
@@ -78,6 +79,14 @@ function ClienteRest(){
 		$.getJSON("/obtenerPartidas",function(lista){
 			console.log(lista);
 			iu.mostrarListaDePartidas(lista);
+		});
+	}
+
+	this.obtenerListaPartidasDisponibles=function(){
+		let cli=this;
+		$.getJSON("/obtenerPartidasDisponibles",function(lista){
+			console.log(lista);
+			iu.mostrarListaDePartidasDisponibles(lista);
 		});
 	}
 
