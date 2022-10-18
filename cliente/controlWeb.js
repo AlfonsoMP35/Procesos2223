@@ -36,9 +36,23 @@ function ControlWeb(){
 		cadena=cadena+'<div class="col">';
 		cadena=cadena+"<p>Bienvenido "+rest.nick+"</p>";
 		cadena=cadena+"<div id='codigo'></div>"
+		cadena=cadena+'<button id="btnSalir" class="btn btn-primary mb-2 mr-sm-2">Salir</button>';
+		cadena=cadena+'<button id="btnRList" class="btn btn-primary mb-2 mr-sm-2">Refrescar</button>';
 		cadena=cadena+"</div></div>";
 		$('#agregarUsuario').append(cadena);
 		this.mostrarCrearPartida();
+
+		$("#btnSalir").on("click",function(e){
+			$("#mCP").remove();
+			$('#mLP').remove();
+			$('#mH').remove();
+			$.removeCookie("nick");
+			iu.comprobarCookie();
+		})
+
+		$("#btnRList").on("click",function(e){
+			rest.obtenerListaPartidasDisponibles();
+		})
 	}
 	this.mostrarCrearPartida=function(){
 		$('#mCP').remove();
@@ -50,6 +64,7 @@ function ControlWeb(){
         $('#crearPartida').append(cadena);
         $("#btnCP").on("click",function(e){		
 			$("#mCP").remove();
+			$('#mLP').remove();
 			rest.crearPartida();
 		})
 	}
@@ -69,4 +84,55 @@ function ControlWeb(){
 		$('#listaPartidas').append(cadena);
 		
 	}
+
+	this.mostrarListaDePartidasDisponibles=function(lista){
+		$('#mLP').remove();
+		let cadena="<div class='row' id='mLP'>";
+		cadena=cadena+"<div class='col'>";
+		cadena=cadena+"<h2>Lista de partidas disponibles</h2>";
+		cadena=cadena+'<button id="btnAL" class="btn btn-primary mb-2 mr-sm-2">Actualizar</button>';
+		cadena=cadena+'<ul class="list-group">';
+		for(i=0;i<lista.length;i++){
+		  cadena = cadena+'<li class="list-group-item"><a href="#" value="'+lista[i].codigo+'"> Nick propietario: '+lista[i].owner+'</a></li>';
+		}
+		cadena=cadena+"</ul>";
+		cadena=cadena+"</div></div>"
+		$('#listaPartidas').append(cadena);
+
+		$(".list-group a").click(function(){
+	        codigo=$(this).attr("value");
+   	        console.log(codigo);
+	        if (codigo){
+	            $('#mLP').remove();
+	            $('#mCP').remove();
+	            rest.unirseAPartida(codigo);
+	        }
+	    });		
+	    $("#btnAL").on("click",function(e){		
+			rest.obtenerListaPartidasDisponibles();
+		})
+	}
+
+	this.comprobarCookie=function(){
+		if($.cookie("nick")){
+			rest.nick=$.cookie("nick");
+			this.mostrarHome();
+		}else{
+			this.mostrarAgregarUsuario();
+		}
+	}
+
+	/*this.eliminarCookie=function(){
+		$.removeCookie("nick");
+		iu.comprobarCookie();
+	}*/
+
+	this.mostrarModal=function(msg){
+		$('#mM').remove();
+		var cadena="<p id='mM'>"+msg+"</p>";
+		$('#contenidoModal').append(cadena);
+		$('#miModal').modal("show");
+	}
+
+
 }
