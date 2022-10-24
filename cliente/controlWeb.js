@@ -41,19 +41,22 @@ function ControlWeb(){
 		cadena=cadena+"</div></div>";
 		$('#agregarUsuario').append(cadena);
 		this.mostrarCrearPartida();
+		rest.obtenerListaPartidasDisponibles();
 
 		$("#btnSalir").on("click",function(e){
 			$("#mCP").remove();
 			$('#mLP').remove();
 			$('#mH').remove();
-			$.removeCookie("nick");
-			iu.comprobarCookie();
+			/*$.removeCookie("nick");
+			iu.comprobarCookie();*/
+			rest.usuarioSale();
 		})
 
-		$("#btnRList").on("click",function(e){
+		/*$("#btnRList").on("click",function(e){
 			rest.obtenerListaPartidasDisponibles();
-		})
+		})*/
 	}
+	
 	this.mostrarCrearPartida=function(){
 		$('#mCP').remove();
 		let cadena= '<div class="row" id="mCP">';//'<form class="form-row needs-validation"  id="mAJ">';

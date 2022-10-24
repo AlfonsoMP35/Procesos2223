@@ -18,6 +18,14 @@ function Juego(){
         delete this.usuarios[nick];
     }
 
+    //Usuario hace log out
+    this.usuarioSale=function(nick){
+		if (this.usuarios[nick]){
+			this.finalizarPartida(nick);
+			this.eliminarUsuario(nick);
+		}
+	}
+
     this.jugadorCreaPartida=function(nick){
         let usr = this.usuarios[nick]; //Juego.obtenerUsuario(nick)
         let res = {"codigo":-1};
@@ -85,6 +93,15 @@ function Juego(){
         return lista;
     }
 
+    //Cambia el estado de las partidas a 'final'
+    this.finalizarPartida=function(nick){
+		for (let key in this.partidas){
+			if (this.partidas[key].fase=="inicial" && this.partidas[key].estoy(nick)){
+				this.partidas[key].fase="final";
+			}
+		}
+	}
+
     
 }
 
@@ -136,6 +153,15 @@ function Partida(codigo, usr){
         return (this.jugadores.length< this.maxJugadores);
     }
 
+    //Existe el jugador
+    this.estoy=function(nick){
+		for(i=0;i<this.jugadores.length;i++){
+			if (this.jugadores[i].nick==nick){
+				return true;
+			}
+		}
+		return false;
+	}
 
     this.agregarJugador(this.owner);
 

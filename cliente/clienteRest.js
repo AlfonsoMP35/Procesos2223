@@ -11,12 +11,11 @@ function ClienteRest(){
 				cli.nick=data.nick;
 				//ws.nick=data.nick;
 				$.cookie("nick",data.nick);
-				cli.obtenerListaPartidas();
 				iu.mostrarHome();//iu.mostrarHome(data.nick)
 			}
 			else{
                 console.log("No se ha podido registrar el usuario");
-				//iu.mostrarModal("El nick ya está en uso");
+				iu.mostrarModal("El nick ya está en uso");
 				iu.mostrarAgregarUsuario();
 			}
 		});
@@ -89,6 +88,14 @@ function ClienteRest(){
 			console.log(lista);
 			iu.mostrarListaDePartidasDisponibles(lista);
 		});
+	}
+
+	this.usuarioSale=function(){
+		let nick=this.nick;
+		$.getJSON("/salir/"+nick,function(){
+			$.removeCookie("nick");
+			iu.comprobarCookie();
+		})
 	}
 
 }
