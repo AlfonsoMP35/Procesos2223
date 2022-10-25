@@ -101,6 +101,10 @@ function Juego(){
 		}
 	}
 
+    this.obtenerPartida=function(codigo){
+        return this.partidas[codigo];
+    }
+
     
 }
 
@@ -161,6 +165,10 @@ function Partida(codigo, usr){
 		}
 		return false;
 	}
+
+    this.esJugando=function(){
+        return this.fase=="jugando";
+    }
 
     this.agregarJugador(this.owner);
 

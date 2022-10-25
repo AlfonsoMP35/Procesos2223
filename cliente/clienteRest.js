@@ -11,6 +11,7 @@ function ClienteRest(){
 				cli.nick=data.nick;
 				//ws.nick=data.nick;
 				$.cookie("nick",data.nick);
+				cws.conectar();		//Activa la conexión del socket de clienteWS
 				iu.mostrarHome();//iu.mostrarHome(data.nick)
 			}
 			else{

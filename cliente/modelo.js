@@ -85,6 +85,10 @@ function Juego(){
         return lista;
     }
 
+    this.obtenerPartida=function(codigo){
+        return this.partidas[codigo];
+    }
+
     
 }
 
@@ -122,6 +126,10 @@ function Partida(codigo, usr){
             console.log("La partida esta completa");
         }
         return res;
+    }
+
+    this.esJugando=function(){
+        return this.fase=="jugando";
     }
 
     this.agregarJugador(this.owner);

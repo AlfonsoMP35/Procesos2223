@@ -68,13 +68,15 @@ function ControlWeb(){
         $("#btnCP").on("click",function(e){		
 			$("#mCP").remove();
 			$('#mLP').remove();
-			rest.crearPartida();
+			//rest.crearPartida(); //Llamada a rest
+			cws.crearPartida(); //Llamada al socket
 		})
 	}
 	this.mostrarCodigo=function(codigo){
 		let cadena="Código de la partida: "+codigo;
 		$('#codigo').append(cadena);
 	}
+
 	this.mostrarListaDePartidas=function(lista){
 		$('#mLP').remove();
 		let cadena="<div id='mLP'>";
@@ -108,7 +110,8 @@ function ControlWeb(){
 	        if (codigo){
 	            $('#mLP').remove();
 	            $('#mCP').remove();
-	            rest.unirseAPartida(codigo);
+	            //rest.unirseAPartida(codigo);
+				cws.unirseAPartida(codigo);
 	        }
 	    });		
 	    $("#btnAL").on("click",function(e){		
