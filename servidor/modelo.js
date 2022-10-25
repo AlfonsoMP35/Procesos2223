@@ -82,16 +82,15 @@ function Juego(){
     }
 
     //Devuelve la lista de partidas disponibles (Las partidas no están completas)
-    this.obtenerPartidasDisponibles=function(){
-        let lista;
-        
-        for(let key in this.partidas){ 
-            if (this.partidas.jugadores.length < 2){
-                lista.push({"codigo":key, "owner":this.partidas[codigo].owner});
-            }
-        }
-        return lista;
-    }
+	this.obtenerPartidasDisponibles=function(){
+		let lista=[];
+		for (let key in this.partidas){
+			if (this.partidas[key].fase=="inicial"){
+				lista.push({"codigo":key,"owner":this.partidas[key].owner.nick});
+			}
+		}
+		return lista;
+	}
 
     //Cambia el estado de las partidas a 'final'
     this.finalizarPartida=function(nick){

@@ -13,7 +13,7 @@ const sWS = require("./servidor/servidorWS.js");
 const PORT = process.env.PORT || 3000; // Start the server
 
 let juego = new modelo.Juego();
-let servidorWS=new sWS.servidorWS();
+let servidorWS=new sWS.ServidorWS();
 
 
 app.use(express.static(__dirname + "/"));
