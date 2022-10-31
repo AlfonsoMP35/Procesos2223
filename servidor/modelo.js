@@ -28,7 +28,7 @@ function Juego(){
 
     this.jugadorCreaPartida=function(nick){
         let usr = this.usuarios[nick]; //Juego.obtenerUsuario(nick)
-        let res = {"codigo":-1};
+        let res = {codigo:-1};
       
         if(usr){
           let codigo = usr.crearPartida();
@@ -137,7 +137,8 @@ function Partida(codigo, usr){
         let res=this.codigo;
         if (this.hayHueco()){
             this.jugadores.push(usr);
-            console.log(usr.nick + "se ha unido a la partida");
+            console.log(usr.nick + " se ha unido a la partida");
+            this.comprobarFase();
         }
         else {
             res=-1;

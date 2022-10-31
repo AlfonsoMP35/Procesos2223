@@ -2,6 +2,7 @@ function ClienteWS(){
 
 
     this.socket;
+    this.codigo;
     //enviar peticiones
 
     //Inicia el socket de clienteWS
@@ -23,6 +24,7 @@ function ClienteWS(){
             if(data.codigo!=1){
                 console.log(cli.nick + " se ha unido a la partida. Codigo: " + data.codigo);
                 iu.mostrarCodigo(data.codigo);
+                cli.codigo=data.codigo;
             }
             else{
                 console.log("El usuario ya se ha unido.");
@@ -41,6 +43,12 @@ function ClienteWS(){
 
 			}
 
+        });
+
+        this.socket.on("actualizarListaPartidas", function(lista){
+            if(!cli.codigo){
+                iu.mostrarListaDePartidasDisponibles(lista);
+            }
         });
 
     }

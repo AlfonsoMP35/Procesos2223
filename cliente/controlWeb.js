@@ -37,7 +37,6 @@ function ControlWeb(){
 		cadena=cadena+"<p>Bienvenido "+rest.nick+"</p>";
 		cadena=cadena+"<div id='codigo'></div>"
 		cadena=cadena+'<button id="btnSalir" class="btn btn-primary mb-2 mr-sm-2">Salir</button>';
-		cadena=cadena+'<button id="btnRList" class="btn btn-primary mb-2 mr-sm-2">Refrescar</button>';
 		cadena=cadena+"</div></div>";
 		$('#agregarUsuario').append(cadena);
 		this.mostrarCrearPartida();
@@ -65,10 +64,11 @@ function ControlWeb(){
         cadena=cadena+'</div>';
         cadena=cadena+'</div>';
         $('#crearPartida').append(cadena);
+
         $("#btnCP").on("click",function(e){		
 			$("#mCP").remove();
 			$('#mLP').remove();
-			//rest.crearPartida(); //Llamada a rest
+			rest.crearPartida(); //Llamada a rest
 			cws.crearPartida(); //Llamada al socket
 		})
 	}
@@ -122,6 +122,7 @@ function ControlWeb(){
 	this.comprobarCookie=function(){
 		if($.cookie("nick")){
 			rest.nick=$.cookie("nick");
+			cws.conectar();
 			this.mostrarHome();
 		}else{
 			this.mostrarAgregarUsuario();
