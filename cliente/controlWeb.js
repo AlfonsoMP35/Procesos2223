@@ -68,7 +68,7 @@ function ControlWeb(){
         $("#btnCP").on("click",function(e){		
 			$("#mCP").remove();
 			$('#mLP').remove();
-			rest.crearPartida(); //Llamada a rest
+			//rest.crearPartida(); //Llamada a rest
 			cws.crearPartida(); //Llamada al socket
 		})
 	}

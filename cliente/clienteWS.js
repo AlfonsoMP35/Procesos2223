@@ -15,6 +15,14 @@ function ClienteWS(){
         this.socket.emit("crearPartida",rest.nick);
     }
 
+    this.unirseAPartida=function(codigo){
+		this.socket.emit("unirseAPartida",rest.nick,codigo);
+	}
+
+	this.abandonarPartida=function(){
+		this.socket.emit("abandonarPartida",rest.nick,cws.codigo);
+	}
+
     //gestionar peticiones
     this.servidorWS=function(){
         let cli=this;
@@ -27,7 +35,9 @@ function ClienteWS(){
                 cli.codigo=data.codigo;
             }
             else{
-                console.log("El usuario ya se ha unido.");
+                console.log("No se ha podido crear partida");
+                iu.mostrarModal("No se ha podido crear partida");
+				iu.mostrarCrearPartida();
             }
 
         });
@@ -35,11 +45,12 @@ function ClienteWS(){
         this.socket.on("unidoAPartida", function(nick,codigo){
             console.log(codigo);
 			if (codigo!=-1){
-                console.log(nick + " se ha unido a la partida. Codigo: " + codigo );
+                console.log(rest.nick + " se ha unido a la partida. Codigo: " + data.codigo );
 				iu.mostrarCodigo(codigo);
+                cli.codigo=data.codigo;
 			}
 			else{
-                console.log("El usuario ya se ha unido.");
+                console.log("No se ha podido unir a partida.");
 
 			}
 
@@ -50,6 +61,10 @@ function ClienteWS(){
                 iu.mostrarListaDePartidasDisponibles(lista);
             }
         });
+
+        this.socket.on("aJugar",function(){
+			iu.mostrarModal("A jugaaar!");
+		})
 
     }
 

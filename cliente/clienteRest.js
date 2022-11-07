@@ -66,7 +66,7 @@ function ClienteRest(){
 				//iu.mostrarHome(data);
 			}
 			else{
-                console.log("El usuario ya se ha unido.");
+                console.log("No se ha podido unir a partida.");
 				//iu.mostrarModal("El nick ya está en uso");
 				//iu.mostrarAgregarJugador();
 			}
