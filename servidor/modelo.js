@@ -284,6 +284,16 @@ function Usuario(nick, juego) {
     }
 
     /**
+     * Devuelve el estado del jugador rival
+     * @param {int} x Posicion x
+     * @param {int} y Posicion y
+     * @returns {string} Estado
+     */
+    this.obtenerEstadoMarcado = function (x, y) {
+        return this.tableroRival.obtenerEstado(x, y);
+    }
+
+    /**
      * Marca el estado en el tablero riaval. Si el estado es "agua",
      * pasa el turno al rival.
      * @param {string} estado 
@@ -297,6 +307,10 @@ function Usuario(nick, juego) {
         }
     }
 
+    /**
+     * Comprueba si la flota a sido hundida.
+     * @returns {boolean} Flota hundida
+     */
     this.flotaHundida = function () {
         for (var key in this.flota) {
             if (this.flota[key].estado != "hundido") {
@@ -678,6 +692,7 @@ function Barco(nombre, tam) {
  */
 function Agua() {
     this.nombre = "agua";
+    this.estado = "agua";
 
     /**
      * Pone la casilla de agua a true.

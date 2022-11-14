@@ -49,11 +49,14 @@ function ControlWeb(){
 			/*$.removeCookie("nick");
 			iu.comprobarCookie();*/
 			rest.usuarioSale();
-		})
+			cws.salir();
+		});
+	}
 
-		/*$("#btnRList").on("click",function(e){
-			rest.obtenerListaPartidasDisponibles();
-		})*/
+	this.salir=function(nick){
+		iu.mostrarModal("Has cerrado sesión.");
+		$.removeCookie("nick");
+		iu.comprobarCookie();
 	}
 	
 	this.mostrarCrearPartida=function(){
@@ -73,8 +76,21 @@ function ControlWeb(){
 		})
 	}
 	this.mostrarCodigo=function(codigo){
-		let cadena="Código de la partida: "+codigo;
+		let cadena="<div id='mostrarCP'><p>Código de la partida: "+codigo+"</p>";
+		cadena=cadena+'<button id="btnAP" class="btn btn-primary mb-2 mr-sm-2">Abandonar partida</button>';
+		cadena=cadena+"</div>";
+
 		$('#codigo').append(cadena);
+		$('#btnAP').on("click",function(e){
+			cws.abandonarPartida();
+			iu.finPartida();
+		});
+	}
+
+	this.finPartida=function(){
+		$("#mostrarCP").remove();
+		cws.codigo=undefined;
+		iu.mostrarHome();
 	}
 
 	this.mostrarListaDePartidas=function(lista){
@@ -128,11 +144,6 @@ function ControlWeb(){
 			this.mostrarAgregarUsuario();
 		}
 	}
-
-	/*this.eliminarCookie=function(){
-		$.removeCookie("nick");
-		iu.comprobarCookie();
-	}*/
 
 	this.mostrarModal=function(msg){
 		$('#mM').remove();

@@ -23,9 +23,17 @@ function ClienteWS(){
 		this.socket.emit("abandonarPartida",rest.nick,cws.codigo);
 	}
 
-    //this.colocarBarco=function(nombre,x,y)
-    //this.barcoDesplegados=function()
-    //this.disparar=function(x,y)
+    this.colocarBarco=function(nombre,x,y){
+        this.socket.emit("colocarBarco",rest.nick,nombre,x,y);
+    }
+
+    this.barcoDesplegados=function(){
+        this.socket.emit("barcoDesplegados",rest.nick);
+    }
+    
+    this.disparar=function(x,y){
+        this.socket.emit("disparar",rest.nick,x,y);
+    }
 
     //gestionar peticiones
     this.servidorWS=function(){
@@ -55,10 +63,13 @@ function ClienteWS(){
 			}
 			else{
                 console.log("No se ha podido unir a partida.");
-
 			}
 
         });
+
+        /*this.socket.on("abandonarPartida",function(nick,codigo){
+            console.log(nick);
+        });*/
 
         this.socket.on("actualizarListaPartidas", function(lista){
             if(!cli.codigo){
@@ -68,7 +79,18 @@ function ClienteWS(){
 
         this.socket.on("aJugar",function(){
 			iu.mostrarModal("A jugaaar!");
-		})
+		});
+
+        this.socket.on("faseDesplegando",function(){
+            console.log("Ya puedes desplegar la flota.");
+        });
+
+        this.socket.on("disparo",function(res){
+			console.log(res.impacto);
+			console.log("Turno: "+res.turno);
+		});
+
+
 
     }
 

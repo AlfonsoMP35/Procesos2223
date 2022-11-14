@@ -5,7 +5,7 @@ describe("Player", function() {
   var usr1,usr2;
 
   beforeEach(function() {
-    miJuego=new Juego();
+    miJuego=new modelo.Juego();
     miJuego.agregarUsuario("pepe");
     miJuego.agregarUsuario("luis");
     let res=miJuego.jugadorCreaPartida("pepe");
@@ -22,8 +22,8 @@ describe("Player", function() {
   });
 
   it("En partida (fase jugando)", function () {
-    expect(partida.estoy("pepe")).toBeTrue();
-    expect(partida.estoy("luis")).toBeTrue();
+    expect(partida.estoy("pepe")).toEqual(true);
+    expect(partida.estoy("luis")).toEqual(true);
 
   });
 
@@ -40,7 +40,7 @@ describe("Player", function() {
     expect(usr1.tableroPropio.casillas[0].length).toEqual(5);
     expect(usr2.tableroPropio.casillas[0].length).toEqual(5);
 
-    expect(usr1.tableroPropio.casillas[0][0].contiene.esAgua()).toBeTrue();
+    expect(usr1.tableroPropio.casillas[0][0].contiene.esAgua()).toEqual(true);
 
 
   });
@@ -58,8 +58,8 @@ describe("Player", function() {
   });
 
   it("la partida está en fase jugando", function () {
-    expect(partida.esJugando()).toBeFalse();
-    expect(partida.esDesplegando()).toBeTrue();
+    expect(partida.esJugando()).toEqual(false);
+    expect(partida.esDesplegando()).toEqual(true);
   });
 
 
@@ -77,9 +77,9 @@ describe("Player", function() {
   
   
     it("Comprobar que las flotas están desplegadas", function() {
-      expect(usr1.todosDesplegados()).toBeTrue();
-      expect(usr2.todosDesplegados()).toBeTrue();
-      expect(partida.flotasDesplegadas()).toBeTrue();
+      expect(usr1.todosDesplegados()).toEqual(true);
+      expect(usr2.todosDesplegados()).toEqual(true);
+      expect(partida.flotasDesplegadas()).toEqual(true);
   
   
     });
@@ -103,9 +103,9 @@ describe("Player", function() {
       usr1.disparar(3,1);
       expect(usr2.flota["b4"].estado).toEqual("hundido");
   
-      expect(partida.esFinal()).toBeTrue();
-      expect(usr2.flotaHundida()).toBeTrue();
-      expect(usr1.flotaHundida()).toBeFalse();
+      expect(partida.esFinal()).toEqual(true);
+      expect(usr2.flotaHundida()).toEqual(true);
+      expect(usr1.flotaHundida()).toEqual(false);
   
     });
   
