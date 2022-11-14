@@ -16,13 +16,10 @@ function ServidorWS(){
         socket.broadcast.emit(mens,datos);
     }
 
-
-
-
     //gestionar peticiones
     this.lanzarServidorWS=function(io,juego){
         let cli=this;
-        io.on('conection', (socket) => {
+        io.on('connection', (socket) => {
             console.log('Usuario conectado');
 
             socket.on("crearPartida",function(nick){

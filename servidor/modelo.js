@@ -106,7 +106,7 @@
         if (usr) {
             let valor = usr.unirAPartida(codigo);
             //let valor = this.unirseAPartida(codigo,usr);
-            res = { "codigo": valor };
+            res = {"codigo": valor};
         }
         return res;
     }

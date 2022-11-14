@@ -42,7 +42,7 @@ function ClienteWS(){
         this.socket.on("partidaCreada", function(data){
             console.log(data);
             if(data.codigo!=1){
-                console.log(cli.nick + " se ha unido a la partida. Codigo: " + data.codigo);
+                console.log(rest.nick + " se ha unido a la partida. Codigo: " + data.codigo);
                 iu.mostrarCodigo(data.codigo);
                 cli.codigo=data.codigo;
             }
@@ -54,11 +54,10 @@ function ClienteWS(){
 
         });
 
-        this.socket.on("unidoAPartida", function(nick,codigo){
-            console.log(codigo);
+        this.socket.on("unidoAPartida", function(data){
 			if (codigo!=-1){
-                console.log(rest.nick + " se ha unido a la partida. Codigo: " + data.codigo );
-				iu.mostrarCodigo(codigo);
+                console.log(rest.nick + " se ha unido a la partida. Codigo: " + data.codigo);
+				iu.mostrarCodigo(data.codigo);
                 cli.codigo=data.codigo;
 			}
 			else{

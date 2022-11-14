@@ -49,7 +49,7 @@ function ControlWeb(){
 			/*$.removeCookie("nick");
 			iu.comprobarCookie();*/
 			rest.usuarioSale();
-			cws.salir();
+			//cws.salir();
 		});
 	}
 
