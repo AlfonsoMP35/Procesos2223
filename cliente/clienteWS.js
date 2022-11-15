@@ -23,6 +23,10 @@ function ClienteWS(){
 		this.socket.emit("abandonarPartida",rest.nick,cws.codigo);
 	}
 
+    this.salir=function(){
+        this.socket.emit("salirPartida",rest.nick);
+    }
+
     this.colocarBarco=function(nombre,x,y){
         this.socket.emit("colocarBarco",rest.nick,nombre,x,y);
     }
@@ -35,7 +39,7 @@ function ClienteWS(){
         this.socket.emit("disparar",rest.nick,x,y);
     }
 
-    //gestionar peticiones
+    //gestionar peticiones (call back)
     this.servidorWS=function(){
         let cli=this;
 
@@ -50,6 +54,7 @@ function ClienteWS(){
                 console.log("No se ha podido crear partida");
                 iu.mostrarModal("No se ha podido crear partida");
 				iu.mostrarCrearPartida();
+                rest.comprobarUsuario();
             }
 
         });
@@ -89,7 +94,9 @@ function ClienteWS(){
 			console.log("Turno: "+res.turno);
 		});
 
-
+        this.socket.on("info",function(info){
+			console.log(info);
+		});
 
     }
 

@@ -65,7 +65,7 @@ function ServidorWS(){
                 if(us){
                     us.barcosDesplegados();
                     let partida=us.partida;
-                    if(partida.esJugando()){
+                    if(partida && partida.esJugando()){
                         let res={fase:partida.fase,turno:partida.turno};
                         let codigoStr=partida.codigo.toString();
                         cli.enviarATodosEnPartida(io,codigoStr,"aJugar",{});
@@ -76,18 +76,19 @@ function ServidorWS(){
             socket.on("disparar",function(nick,x,y){
                 let us = juego.obtenerUsuario(nick);
                 let partida = us.partida;
-                if(us){
-                    if(partida.esJugando()){
-                        us.disparar(x,y);
-                        let estado = us.obtenerEstadoMarcado(x,y);
-                        let partida=us.partida;
-                        letcodigoStr=partida.codigo.toString();
-                        let res={impacto:estado,x:x,y:y,turno:partida.turno.nick};
-                        cli.enviarATodosEnPartida(io,codigoStr,"disparo",res);
-                        if(partida.esFinal()){
-                            cli.enviarATodosEnPartida(io,codigoStr,"finPartida",res);
-                        }
+                if(us && partida.esJugando() && partida.turno.nick==nick){
+                    us.disparar(x,y);
+                    let estado = us.obtenerEstadoMarcado(x,y);
+                    let partida=us.partida;
+                    letcodigoStr=partida.codigo.toString();
+                    let res={impacto:estado,x:x,y:y,turno:partida.turno.nick};
+                    cli.enviarATodosEnPartida(io,codigoStr,"disparo",res);
+                    if(partida.esFinal()){
+                        cli.enviarATodosEnPartida(io,codigoStr,"finPartida",res);
                     }
+                }
+                else{
+                    cli.enviarATodosEnPartida(io,codigoStr,"info",res);
                 }
             });
             

@@ -117,9 +117,9 @@
      * @returns {String} Nombre del usuario
      */
     this.obtenerUsuario = function (nick) {
-        if (this.usuarios[nick]) {
+        //if (this.usuarios[nick]) {
             return this.usuarios[nick];
-        }
+        //}
     }
 
     /**
@@ -252,7 +252,9 @@ function Usuario(nick, juego) {
      * Llama al metodo barcosDesplegados de partida
      */
     this.barcosDesplegados = function () {
-        this.partida.barcosDesplegados();
+        if(this.partida){
+            this.partida.barcosDesplegados();
+        }
     }
 
     /**
@@ -270,7 +272,7 @@ function Usuario(nick, juego) {
      * @param {int} y Posicion y
      */
     this.meDisparan = function (x, y) {
-        this.tableroPropio.meDisparan(x, y);
+        return this.tableroPropio.meDisparan(x, y);
     }
 
     /**
@@ -484,10 +486,11 @@ function Partida(codigo, usr) {
         console.log("Atacante: " + atacante.nick);
         if (this.turno.nick == atacante.nick) {
             let atacado = this.obtenerRival(nick);
-            console.log("Atacado: " + atacado.nick);
+            let estado=atacado.meDisparan(x,y);
+            //console.log("Atacado: " + atacado.nick);
             atacado.meDisparan(x, y);
-            let estado = atacado.obtenerEstado(x, y);
-            console.log("Estado: " + estado)
+            //let estado = atacado.obtenerEstado(x, y);
+            //console.log("Estado: " + estado)
             atacante.marcarEstado(estado, x, y);
             this.comprobarFin(atacado);
         }
@@ -592,7 +595,7 @@ function Tablero(size) {
      * @param {int} y Posicion y
      */
     this.meDisparan = function (x, y) {
-        this.casillas[x][y].contiene.meDisparan();
+        return this.casillas[x][y].contiene.meDisparan(this,x,y);
     }
 
     /**
@@ -613,6 +616,10 @@ function Tablero(size) {
      */
     this.marcarEstado = function (estado, x, y) {
         this.casillas[x][y].contiene = estado;
+    }
+
+    this.ponerAgua=function(x,y){
+        this.casillas[x][y].contiene = new Agua();
     }
 
     /**
@@ -663,7 +670,7 @@ function Barco(nombre, tam) {
     /**
      * Comprueba si el barco a sido atacado o si ha sido hundido.
      */
-    this.meDisparan = function () {
+    this.meDisparan = function(tablero,x,y) {
         this.disparos++;
         if (this.disparos < this.tam) {
             this.estado = "tocado";
@@ -672,6 +679,8 @@ function Barco(nombre, tam) {
             this.estado = "hundido";
             console.log("Hundido!!");
         }
+        tablero.ponerAgua(x,y);
+        return this.estado;
     }
 
     /**
@@ -705,8 +714,9 @@ function Agua() {
     /**
      * Imprime "agua" (ha fallado el disparo).
      */
-    this.meDisparan = function () {
-        console.log("Agua")
+    this.meDisparan = function (tablero,x,y) {
+        console.log("Agua");
+        return this.estado;
     }
 
     /**

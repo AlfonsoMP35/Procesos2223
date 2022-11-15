@@ -25,7 +25,29 @@ function ClienteRest(){
         //Lo que pongas aqui se ejecuta a la vez que la llamada
 	}
 
-    this.crearPartida=function(){
+	this.comprobarUsuario=function(){
+		let cli=this;
+		$.getJSON("/comprobarUsuario/" +this.nick, function(data){
+		//console.log(data);
+			if (data.nick!=-1){
+                console.log("Usuario " + data.nick + " activo.");
+				//cli.nick=data.nick;
+				//ws.nick=data.nick;
+				//$.cookie("nick",data.nick);
+				cws.conectar();		//Activa la conexión del socket de clienteWS
+				iu.mostrarHome();   //iu.mostrarHome(data.nick)
+			}
+			else{
+                console.log("El usuario no está activo.");
+				//iu.mostrarModal("El nick ya está en uso");
+				iu.mostrarAgregarUsuario();
+			}	
+
+		})
+
+	}
+
+    /*this.crearPartida=function(){
 		var cli=this;
 		let nick=cli.nick;
 		$.getJSON("/crearPartida/"+nick,function(data){  //Conexión con el API REST
@@ -54,8 +76,8 @@ function ClienteRest(){
 		var cli=this;
 		$.getJSON("/unirseAPartida/"+cli.nick+"/"+codigo,function(data){  //Conexión con el API REST
 			//se ejecuta cuando conteste el servidor
-           /* this.nick = nick;
-            this.codigo = codigo;*/
+            //this.nick = nick;
+            //this.codigo = codigo;
             
 			console.log(data);
 			if (data.codigo!=-1){
@@ -72,7 +94,7 @@ function ClienteRest(){
 			}
 		});
 
-	}
+	}*/
 
 	this.obtenerListaPartidas=function(){
 		let cli=this;
