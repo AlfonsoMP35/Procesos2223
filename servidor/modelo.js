@@ -223,6 +223,10 @@ function Usuario(nick, juego) {
         //otros barcos ...
     }
 
+    this.obtenerFlota = function(){
+        return this.flota;
+    }
+
     /**
      * Coloca el barco en las posición indicada teniendo en cuenta su tamaño.
      * Las posiciones del barco pueden ser fijas o predefinidas, aleatorias, creadas por el usuario...

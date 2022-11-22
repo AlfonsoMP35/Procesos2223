@@ -39,10 +39,16 @@ function ServidorWS(){
                 cli.enviarAlRemitente(socket, "unidoAPartida", res);
                 
                 //Comprueba que la partida puede comenzar
-                /*let partida=juego.obtenerPartida(codigo);
-                if(partida.esJugando()){
+                let partida=juego.obtenerPartida(codigo);
+               /* if(partida.esJugando()){
                     cli.enviarATodosEnPartida(io,codigoSTR,"aJugar",{});
                 }*/
+                if(partida.esDesplegando()){
+                    let us = juego.obtenerUsuario(nick);
+                    let flota=us.obtenerFlota();
+                    let res = {};
+                    cli.enviarATodosEnPartida(io,codigoSTR,"faseDesplegando",res);
+                }
             });
 
             /*socket.on("abandonarPartida", function(nick,codigo){
@@ -91,6 +97,8 @@ function ServidorWS(){
                     cli.enviarATodosEnPartida(io,codigoStr,"info",res);
                 }
             });
+
+            
             
         });
 

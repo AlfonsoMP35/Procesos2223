@@ -53,7 +53,7 @@ function ClienteWS(){
             else{
                 console.log("No se ha podido crear partida");
                 iu.mostrarModal("No se ha podido crear partida");
-				iu.mostrarCrearPartida();
+				//iu.mostrarCrearPartida();
                 rest.comprobarUsuario();
             }
 
@@ -71,9 +71,10 @@ function ClienteWS(){
 
         });
 
-        /*this.socket.on("abandonarPartida",function(nick,codigo){
-            console.log(nick);
-        });*/
+        this.socket.on("abandonarPartida",function(data){
+			iu.mostrarModal("Jugador "+data.nick+" abandona");
+			iu.finPartida();
+		});
 
         this.socket.on("actualizarListaPartidas", function(lista){
             if(!cli.codigo){
@@ -82,20 +83,47 @@ function ClienteWS(){
         });
 
         this.socket.on("aJugar",function(){
-			iu.mostrarModal("A jugaaar!");
+			if (res.fase=="jugando"){
+				console.log("A jugar, le toca a: "+res.turno);
+			}
 		});
 
-        this.socket.on("faseDesplegando",function(){
+        this.socket.on("faseDesplegando",function(data){
+            tablero.flota=data.flota; //array asociativo (diccionario)
+			//tablero.mostrar(true);
+			//tablero.mostrarFlota();//data.flota);
             console.log("Ya puedes desplegar la flota.");
         });
 
         this.socket.on("disparo",function(res){
 			console.log(res.impacto);
 			console.log("Turno: "+res.turno);
+			if (res.atacante==rest.nick){
+				tablero.updateCell(res.x,res.y,res.impacto,'computer-player');
+			}
 		});
 
         this.socket.on("info",function(info){
 			console.log(info);
+		});
+
+        this.socket.on("finPartida",function(res){
+			console.log("Fin de la partida");
+			console.log("Ganador: "+res.turno);
+			iu.mostrarModal("Fin de la partida. Ganador: "+res.turno);
+			iu.finPartida();
+		});
+
+        this.socket.on("barcoColocado",function(res){
+			let barco=tablero.flota[res.barco];
+			if (res.colocado){
+                tablero.puedesColocarBarco(barco);
+				//tablero.terminarDeColocarBarco(barco,res.x,res.y);
+				//cli.barcosDesplegados();
+			}
+			else{
+				iu.mostrarModal("No se puede colocar barco");
+			}
 		});
 
     }
