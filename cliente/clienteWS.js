@@ -60,7 +60,7 @@ function ClienteWS(){
         });
 
         this.socket.on("unidoAPartida", function(data){
-			if (codigo!=-1){
+			if (data.codigo!=-1){
                 console.log(rest.nick + " se ha unido a la partida. Codigo: " + data.codigo);
 				iu.mostrarCodigo(data.codigo);
                 cli.codigo=data.codigo;

@@ -32,14 +32,13 @@ function ServidorWS(){
                 cli.enviarATodos(socket,"actualizarListaPartidas", lista);
             });
 
-            socket.on("unirseAPartida",function(nick,codigo){               
-                let codigoStr=codigo.toString();           
+			socket.on("unirseAPartida",function(nick,codigo){
+                let codigoStr=codigo.toString();
                 socket.join(codigoStr);
-                let res = juego.jugadorSeUneAPartida(nick,codigo);
-                cli.enviarAlRemitente(socket, "unidoAPartida", res);
-                
-                //Comprueba que la partida puede comenzar
+                let res = juego.jugadorSeUneAPartida(nick,codigo);		  	
+                cli.enviarAlRemitente(socket,"unidoAPartida",res);		  	
                 let partida=juego.obtenerPartida(codigo);
+                
                /* if(partida.esJugando()){
                     cli.enviarATodosEnPartida(io,codigoSTR,"aJugar",{});
                 }*/
