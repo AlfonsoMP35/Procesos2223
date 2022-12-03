@@ -27,11 +27,11 @@
 			playerRoster[i].addEventListener('click', this.rosterListener, false);
 		}
 
-		/*var computerCells = document.querySelector('.computer-player').childNodes;
+		var computerCells = document.querySelector('.computer-player').childNodes;
 		for (var j = 0; j < computerCells.length; j++) {
 			computerCells[j].self = this;
 			computerCells[j].addEventListener('click', this.shootListener, false);
-		}*/
+		}
 
     }
 
@@ -83,29 +83,21 @@
 			console.log("Barco: " +self.nombreBarco+" x: "+x+" y: "+y);
 			
 			// Don't screw up the direction if the user tries to place again.
-			var successful = self.colocarBarco(selft.nombreBarco, x, y);
-			/*if (successful) {
+			var successful = self.colocarBarco(self.nombreBarco, x, y);
 
-				//Estas dos lineas hay que ejecutarlas en la respuesta del servidor
-				// Done placing this ship
-				self.endPlacing(self.nombreBarco);
-				self.placingOnGrid = false;
-
-				// if (self.areAllShipsPlaced()) {
-				// 	var el = document.getElementById('rotate-button');
-				// 	el.addEventListener(transitionEndEventName(),(function(){
-				// 		el.setAttribute('class', 'hidden');
-				// 		if (gameTutorial.showTutorial) {
-				// 			document.getElementById('start-game').setAttribute('class', 'highlight');
-				// 		} else {
-				// 			document.getElementById('start-game').removeAttribute('class');	
-				// 		}
-				// 	}),false);
-				// 	el.setAttribute('class', 'invisible');
-				// }
-			}*/
 		}
 	};
+
+	this.shootListener = function(e) {
+
+		// Extract coordinates from event listener
+		var x = parseInt(e.target.getAttribute('data-x'), 10);
+		var y = parseInt(e.target.getAttribute('data-y'), 10);
+		console.log("Disparo en x: "+x+" y: "+y);
+		cws.disparar(x,y);	
+	};
+
+
 
 	this.colocarBarco=function(nombre,x,y){
 		console.log("Barco: " +nombre+" x: "+x+" y: "+y);
@@ -130,13 +122,13 @@
 		self.placingOnGrid = true;
 	};
 
-	this.terminarDeColocarBarco=function(barco,x,y){
+	/*this.terminarDeColocarBarco=function(barco,x,y){
 		for(i=0;i<barco.tam;i++){
 			console.log("x: "+(x+i)+" y:"+y);
 			this.updateCell(x+i,y,"ship",'human-player');
 		}
 		self.endPlacing(barco.nombre);
-	}
+	}*/
 
 	this.endPlacing = function(shipType) {
 		document.getElementById(shipType).setAttribute('class', 'placed');
@@ -145,48 +137,21 @@
 
 
     this.updateCell = function(x, y, type,targetPlayer) {
-		var player=targetPlayer;//'human-player';
-		// if (targetPlayer === CONST.HUMAN_PLAYER) {
-		// 	player = 'human-player';
-		// } else if (targetPlayer === CONST.COMPUTER_PLAYER) {
-		// 	player = 'computer-player';
-		// } else {
-		// 	// Should never be called
-		// 	console.log("There was an error trying to find the correct player's grid");
-		// }
-
-		// switch (type) {
-		// 	case CONST.CSS_TYPE_EMPTY:
-		// 		this.cells[x][y] = CONST.TYPE_EMPTY;
-		// 		break;
-		// 	case CONST.CSS_TYPE_SHIP:
-		// 		this.cells[x][y] = CONST.TYPE_SHIP;
-		// 		break;
-		// 	case CONST.CSS_TYPE_MISS:
-		// 		this.cells[x][y] = CONST.TYPE_MISS;
-		// 		break;
-		// 	case CONST.CSS_TYPE_HIT:
-		// 		this.cells[x][y] = CONST.TYPE_HIT;
-		// 		break;
-		// 	case CONST.CSS_TYPE_SUNK:
-		// 		this.cells[x][y] = CONST.TYPE_SUNK;
-		// 		break;
-		// 	default:
-		// 		this.cells[x][y] = CONST.TYPE_EMPTY;
-		// 		break;
-		// }
+		var player=targetPlayer;
 		var classes = ['grid-cell', 'grid-cell-' + x + '-' + y, 'grid-' + type];
 		document.querySelector('.' + player + ' .grid-cell-' + x + '-' + y).setAttribute('class', classes.join(' '));
 	};
 
-	this.puedesColocarBarco=function(barco){
+	this.puedesColocarBarco=function(barco, x, y){
 		//obtener el barco a partir del nombre
 		//bucle del tamaño del barco que marque las celdas
 		//let barco = this.flota[data.nombre];
+		console.log(barco);
 		for(i=0;i<barco.tam;i++){
-			this.updateCell(barco.x+i,barco.y,'ship','human-player');
+			this.updateCell(x+i,y,'ship','human-player');
 		}
-		this.placingOnGrid=false;
+		//this.placingOnGrid=false;
+		this.endPlacing(barco.nombre);
 
 	};
 

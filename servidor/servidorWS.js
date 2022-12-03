@@ -46,7 +46,8 @@ function ServidorWS(){
                     let us = juego.obtenerUsuario(nick);
                     let flota=us.obtenerFlota();
                     let res = {};
-                    cli.enviarATodosEnPartida(io,codigoSTR,"faseDesplegando",res);
+                    res.flota = flota;
+                    cli.enviarATodosEnPartida(io,codigoStr,"faseDesplegando",res);
                 }
             });
 
@@ -60,7 +61,7 @@ function ServidorWS(){
                 if(us){
                     us.colocarBarco(nombre,x,y);
                     let desplegado=us.obtenerBarcoDesplegado(nombre);
-                    let res={barco:nombre,colocado:desplegado};
+                    let res={barco:nombre,colocado:desplegado, x:x , y:y};
                     cli.enviarAlRemitente(socket,"barcoColocado",res);
                 }
             });
@@ -71,9 +72,9 @@ function ServidorWS(){
                     us.barcosDesplegados();
                     let partida=us.partida;
                     if(partida && partida.esJugando()){
-                        let res={fase:partida.fase,turno:partida.turno};
+                        let res={fase:partida.fase,turno:partida.turno.nick};
                         let codigoStr=partida.codigo.toString();
-                        cli.enviarATodosEnPartida(io,codigoStr,"aJugar",{});
+                        cli.enviarATodosEnPartida(io,codigoStr,"aJugar",res);
                     } 
                 }
             });
@@ -81,11 +82,12 @@ function ServidorWS(){
             socket.on("disparar",function(nick,x,y){
                 let us = juego.obtenerUsuario(nick);
                 let partida = us.partida;
+                //console.log("Fase:"+partida.fase+ "turno"+ partida.turno.nick)
                 if(us && partida.esJugando() && partida.turno.nick==nick){
                     us.disparar(x,y);
                     let estado = us.obtenerEstadoMarcado(x,y);
                     let partida=us.partida;
-                    letcodigoStr=partida.codigo.toString();
+                    let codigoStr=partida.codigo.toString();
                     let res={impacto:estado,x:x,y:y,turno:partida.turno.nick};
                     cli.enviarATodosEnPartida(io,codigoStr,"disparo",res);
                     if(partida.esFinal()){
@@ -93,7 +95,7 @@ function ServidorWS(){
                     }
                 }
                 else{
-                    cli.enviarATodosEnPartida(io,codigoStr,"info",res);
+                    cli.enviarAlRemitente(io, "info", "No es tu turno");
                 }
             });
 

@@ -184,7 +184,7 @@ function Usuario(nick, juego) {
     this.tableroPropio;
     this.tableroRival;
     this.partida;
-    this.flota = [];
+    this.flota = {};
 
     /**
      * Llama al metodo crearPartida de Juego
@@ -199,7 +199,7 @@ function Usuario(nick, juego) {
      * @param {int} codigo Codigo partida
      */
     this.unirAPartida = function (codigo) {
-        this.juego.unirAPartida(codigo, this);
+       return this.juego.unirAPartida(codigo, this);
 
     }
 
@@ -232,7 +232,7 @@ function Usuario(nick, juego) {
      * Las posiciones del barco pueden ser fijas o predefinidas, aleatorias, creadas por el usuario...
      */
     this.colocarBarco = function (nombre, x, y) {
-        if (partida.fase == "desplegando") {
+        if (this.partida && this.partida.fase == "desplegando") {
             let barco = this.flota[nombre];
             this.tableroPropio.colocarBarco(barco, x, y);
 
@@ -311,6 +311,10 @@ function Usuario(nick, juego) {
         if (estado == "agua") {
             this.partida.cambiarTurno(this.nick);
         }
+    }
+
+    this.obtenerBarcoDesplegado = function (nombre){
+        return this.flota[nombre].desplegado;
     }
 
     /**
@@ -431,6 +435,7 @@ function Partida(codigo, usr) {
         if (this.flotasDesplegadas()) {
             this.fase = "jugando";
             this.asignarTurnoInicial();
+            console.log("Partida pasa a fase jugando.");
         }
     }
 
@@ -438,7 +443,9 @@ function Partida(codigo, usr) {
      * Asigna el turno inicial al primer jugador de la lista
      */
     this.asignarTurnoInicial = function () {
+        
         this.turno = this.jugadores[0];
+        console.log("Turno: " +this.turno.nick);
     }
 
     /**
@@ -447,6 +454,7 @@ function Partida(codigo, usr) {
      */
     this.cambiarTurno = function (nick) {
         this.turno = this.obtenerRival(nick);
+        console.log("Turno: " +this.turno.nick);
     }
 
     /**
