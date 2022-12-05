@@ -1,3 +1,4 @@
+let cad=require("./cad.js");
 
 /////////////////////////////////////////////////////////////////////////
 //CREACIÓN DEL JUEGO
@@ -5,9 +6,11 @@
 /**
  * @function Juego
  */
- function Juego() {
+ function Juego(test) {
     this.partidas = {}; //Diccionario (asociación clave-valor) this.partidas=[];
     this.usuarios = {};
+    this.cad = new cad.Cad();
+    this.test = test;
 
     /**
      * Agrega un usuario si no existe previamente.
@@ -20,6 +23,9 @@
             this.usuarios[nick] = new Usuario(nick, this);
             res = { "nick": nick };
             console.log("Nuevo usuario: " + nick);
+            this.cad.insertarLog({"operacion":"agregarUsuario","usuario":nick,"fecha":Date()},function(){
+                console.log("Registro de log insertado -> Agregar Usuario");
+            });
         }
         return res;
     }
@@ -72,6 +78,9 @@
         //devolver el código
         let codigo = Date.now();
         console.log("Usuario " + usr.nick + " crea partida " + codigo);
+        this.cad.insertarLog({"operacion":"crearPartida","propietario":usr.nick,"fecha":Date()},function(){
+            console.log("Registro de log insertado -> Crear Partida");
+        });
         this.partidas[codigo] = new Partida(codigo, usr);
         return codigo;
     }
@@ -86,6 +95,9 @@
         let res = -1;
         if (this.partidas[codigo]) {
             res = this.partidas[codigo].agregarJugador(usr);
+            this.cad.insertarLog({"operacion":"unirAPartida","codigo":codigo,"fecha":Date()},function(){
+                console.log("Registro de log insertado -> Unir A Partidad");
+            });
         }
         else {
             console.log("La partida no existe");
@@ -157,6 +169,9 @@
         for (let key in this.partidas) {
             if (this.partidas[key].fase == "inicial" && this.partidas[key].estoy(nick)) {
                 this.partidas[key].fase = "final";
+                this.cad.insertarLog({"operacion":"finalizarPartida","usuario":nick,"fecha":Date()},function(){
+                    console.log("Registro de log insertado -> Finalizar Partida (Abandona o Sale)");
+                });
             }
         }
     }
@@ -170,6 +185,16 @@
         return this.partidas[codigo];
     }
 
+    this.obtenerLogs=function(callback){
+        this.cad.obtenerLogs(callback);
+    }
+
+    //this.cad.conectar();
+    if(!test){
+        this.cad.conectar(function(db){
+            console.log("Conectando a Mongo");
+        })
+    }
 
 }
 
@@ -328,6 +353,10 @@ function Usuario(nick, juego) {
             }
         }
         return true;
+    }
+
+    this.insertarLog = function(log, callback){
+
     }
 
 }
@@ -523,6 +552,19 @@ function Partida(codigo, usr) {
         }
     }
 
+    this.jugadorAbandona=function(nick,codigo){
+        if(this.partidas[codigo]){
+            this.partidas[codigo].fase="final";
+            console.log(nick +" abandona la partida.");
+        }
+    }
+
+    this.insertarLog=function(log,callback){
+        if(!test){
+
+        }
+    }
+
     /**
      * Agrega al creador de la partida a la partida.
      */
@@ -617,7 +659,7 @@ function Tablero(size) {
      * @returns {String} Estado de la casilla
      */
     this.obtenerEstado = function (x, y) {
-        return this.casillas[x][y].contiene.obtenerEstado();
+        return this.casillas[x][y].contiene.obtenerEstado(this,x,y);
     }
 
     /**
@@ -699,7 +741,7 @@ function Barco(nombre, tam) {
      * Devuelve el estado del barco.
      * @returns {string} Estado del barco
      */
-    this.obtenerEstado = function () {
+    this.obtenerEstado = function (x,y) {
         return this.estado;
     }
 
@@ -734,7 +776,7 @@ function Agua() {
     /**
      * Pone el estado en "agua".
      */
-    this.obtenerEstado = function () {
+    this.obtenerEstado = function (x,y) {
         return "agua";
     }
 }

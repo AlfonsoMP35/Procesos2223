@@ -12,7 +12,7 @@ const sWS = require("./servidor/servidorWS.js");
 
 const PORT = process.env.PORT || 3000; // Start the server
 
-let juego = new modelo.Juego();
+let juego = new modelo.Juego(args[0]);
 let servidorWS=new sWS.ServidorWS();
 
 
@@ -67,6 +67,12 @@ app.get("/salir/:nick",function(request,response){
   let nick=request.params.nick;
   juego.usuarioSale(nick);
   response.send({res:"ok"})
+})
+
+app.get("/obtenerLogs", function(request,response){
+  juego.obtenerLogs(function(logs){
+    response.send(logs);
+  })
 })
 
 /*app.listen(PORT, () => {
