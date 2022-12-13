@@ -10,6 +10,8 @@ const io = new Server(server);
 const modelo = require("./servidor/modelo.js");
 const sWS = require("./servidor/servidorWS.js");
 
+
+
 const PORT = process.env.PORT || 3000; // Start the server
 
 let juego = new modelo.Juego(args[0]);
@@ -23,6 +25,11 @@ app.get("/", function(request,response){
 	response.setHeader("Content-type","text/html");
 	response.send(contenido);
 });
+
+app.get("/auth/google",passport.authenticate('google', { scope: ['profile','email'] }));
+
+//estrategia local
+//"/auth/github"
 
 app.get("/agregarUsuario/:nick",function(request,response){
   let nick = request.params.nick;
@@ -75,13 +82,15 @@ app.get("/obtenerLogs", function(request,response){
   })
 })
 
+
+
 /*app.listen(PORT, () => {
   console.log('App está escuchando en el puerto ${PORT}');
   console.log('Ctrl+C para salir.');
 });*/
 
 server.listen(PORT, () => {
-  console.log(`App está escuchando en el puerto ${PORT}`);
+  console.log('App está escuchando en el puerto ${PORT}');
   console.log('Ctrl+C para salir');
 });
 
