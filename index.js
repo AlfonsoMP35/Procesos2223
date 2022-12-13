@@ -10,15 +10,20 @@ const io = new Server(server);
 const modelo = require("./servidor/modelo.js");
 const sWS = require("./servidor/servidorWS.js");
 
-
-
 const PORT = process.env.PORT || 3000; // Start the server
 
-let juego = new modelo.Juego(args[0]);
+let juego = new modelo.Juego("args[0]");
 let servidorWS=new sWS.ServidorWS();
+const cookieSession=require("cookie-session");
+require("./servidor/passport-setup.js");
 
 
 app.use(express.static(__dirname + "/"));
+
+app.use(cookieSession({
+  name: 'Batalla Naval',
+  keys: ['key1', 'key2']
+}));
 
 app.get("/", function(request,response){
 	var contenido=fs.readFileSync(__dirname+"/cliente/index.html");
@@ -27,6 +32,27 @@ app.get("/", function(request,response){
 });
 
 app.get("/auth/google",passport.authenticate('google', { scope: ['profile','email'] }));
+
+app.get('/google/callback', 
+  passport.authenticate('google', { failureRedirect: '/fallo' }),
+  function(req, res) {
+    // Successful authentication, redirect home.
+    res.redirect('/good');
+});
+
+app.get("/good", function(request,response){
+  var nick=request.user.emails[0].value;
+  if (nick){
+    juego.agregarUsuario(nick);
+  }
+  response.cookie('nick',nick);
+  response.redirect('/');
+});
+
+app.get("/fallo",function(request,response){
+  response.send({nick:"nook"})
+})
+
 
 //estrategia local
 //"/auth/github"
