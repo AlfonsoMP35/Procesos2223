@@ -12,7 +12,9 @@ const sWS = require("./servidor/servidorWS.js");
 
 const PORT = process.env.PORT || 3000; // Start the server
 
-let juego = new modelo.Juego("args[0]");
+var args = process.argv.slice(2);
+
+let juego = new modelo.Juego(args[0]);
 let servidorWS=new sWS.ServidorWS();
 const cookieSession=require("cookie-session");
 require("./servidor/passport-setup.js");
@@ -24,6 +26,10 @@ app.use(cookieSession({
   name: 'Batalla Naval',
   keys: ['key1', 'key2']
 }));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 
 app.get("/", function(request,response){
 	var contenido=fs.readFileSync(__dirname+"/cliente/index.html");
