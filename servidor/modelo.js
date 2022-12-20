@@ -736,6 +736,7 @@ function Barco(nombre, tam) {
         this.desplegado=true;
     }
 
+    //CORREGIR////////////////////////////////////////////////////////////////////
     this.colocar=function(tablero,x,y){
 
     }
