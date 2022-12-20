@@ -23,7 +23,7 @@ let cad=require("./cad.js");
             this.usuarios[nick] = new Usuario(nick, this);
             res = { "nick": nick };
             console.log("Nuevo usuario: " + nick);
-            this.cad.insertarLog({"operacion":"agregarUsuario","usuario":nick,"fecha":Date()},function(){
+            this.insertarLog({"operacion":"agregarUsuario","usuario":nick,"fecha":Date()},function(){
                 console.log("Registro de log insertado -> Agregar Usuario");
             });
         }
@@ -46,6 +46,10 @@ let cad=require("./cad.js");
         if (this.usuarios[nick]) {
             this.finalizarPartida(nick);
             this.eliminarUsuario(nick);
+
+            this.insertarLog({"operacion":"eliminarUsuario","propietario":nick,"fecha":Date()},function(){
+				console.log("Registro  de log insertado(eliminarUsuario)")
+			})
         }
     }
 
@@ -78,7 +82,7 @@ let cad=require("./cad.js");
         //devolver el código
         let codigo = Date.now();
         console.log("Usuario " + usr.nick + " crea partida " + codigo);
-        this.cad.insertarLog({"operacion":"crearPartida","propietario":usr.nick,"fecha":Date()},function(){
+        this.insertarLog({"operacion":"crearPartida","propietario":usr.nick,"fecha":Date()},function(){
             console.log("Registro de log insertado -> Crear Partida");
         });
         this.partidas[codigo] = new Partida(codigo, usr);
@@ -95,7 +99,7 @@ let cad=require("./cad.js");
         let res = -1;
         if (this.partidas[codigo]) {
             res = this.partidas[codigo].agregarJugador(usr);
-            this.cad.insertarLog({"operacion":"unirAPartida","codigo":codigo,"fecha":Date()},function(){
+            this.insertarLog({"operacion":"unirAPartida","codigo":codigo,"fecha":Date()},function(){
                 console.log("Registro de log insertado -> Unir A Partidad");
             });
         }
@@ -169,7 +173,7 @@ let cad=require("./cad.js");
         for (let key in this.partidas) {
             if (this.partidas[key].fase == "inicial" && this.partidas[key].estoy(nick)) {
                 this.partidas[key].fase = "final";
-                this.cad.insertarLog({"operacion":"finalizarPartida","usuario":nick,"fecha":Date()},function(){
+                this.insertarLog({"operacion":"finalizarPartida","usuario":nick,"fecha":Date()},function(){
                     console.log("Registro de log insertado -> Finalizar Partida (Abandona o Sale)");
                 });
             }
@@ -189,13 +193,26 @@ let cad=require("./cad.js");
         this.cad.obtenerLogs(callback);
     }
 
-    //this.cad.conectar();
+
+    this.insertarLog=function(log,callback){
+		if(this.test=="false"){
+			this.cad.insertarLog(log,callback);
+		}
+	}
+
+	this.obtenerLogs=function(callback){
+		this.cad.obtenerLogs(callback);
+
+	}
+
     if(!test){
         this.cad.conectar(function(db){
             console.log("Conectando a Mongo");
         })
     }
 
+
+    //this.cad.conectar();
 }
 
 
@@ -559,11 +576,6 @@ function Partida(codigo, usr) {
         }
     }
 
-    this.insertarLog=function(log,callback){
-        if(!test){
-
-        }
-    }
 
     /**
      * Agrega al creador de la partida a la partida.
@@ -669,7 +681,7 @@ function Tablero(size) {
      * @param {int} y Posicion y
      */
     this.marcarEstado = function (estado, x, y) {
-        this.casillas[x][y].contiene = estado;
+        this.casillas[x][y].contiene.estado = estado;
     }
 
     this.ponerAgua=function(x,y){
