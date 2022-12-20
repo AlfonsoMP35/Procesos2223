@@ -12,6 +12,8 @@ const sWS = require("./servidor/servidorWS.js");
 
 const PORT = process.env.PORT || 3000; // Start the server
 
+var args = process.argv.slice(2);
+
 let juego = new modelo.Juego(args[0]);
 let servidorWS=new sWS.ServidorWS();
 
