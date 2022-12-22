@@ -28,7 +28,7 @@ app.get("/", function(request,response){
 
 app.get("/agregarUsuario/:nick",function(request,response){
   let nick = request.params.nick;
-  let res=juego.agregarUsuario(nick);
+  let res=juego.agregarUsuario(nick,false);
   response.send(res);
 });
 

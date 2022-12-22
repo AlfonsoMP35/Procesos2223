@@ -17,12 +17,17 @@ let cad=require("./cad.js");
      * @param {String} nick Nombre del usuario
      * @returns {JsonWebKey} Registro del usuario 
      */
-    this.agregarUsuario = function (nick) {
+    this.agregarUsuario = function (nick, guardar) {
         let res = { "nick": -1 };
         if (!this.usuarios[nick]) {
             this.usuarios[nick] = new Usuario(nick, this);
             res = { "nick": nick };
             console.log("Nuevo usuario: " + nick);
+            if(guardar && (this.test=="false")){
+                this.cad.obtenerOCrearUsuario({"nick":nick},function(usr){
+                    console.log("Usuario creado");
+                })
+            }
             this.insertarLog({"operacion":"agregarUsuario","usuario":nick,"fecha":Date()},function(){
                 console.log("Registro de log insertado -> Agregar Usuario");
             });
@@ -198,11 +203,6 @@ let cad=require("./cad.js");
 		if(this.test=="false"){
 			this.cad.insertarLog(log,callback);
 		}
-	}
-
-	this.obtenerLogs=function(callback){
-		this.cad.obtenerLogs(callback);
-
 	}
 
     if(!test){
@@ -658,6 +658,15 @@ function Tablero(size) {
         return true;
     }
 
+    this.casillasLibresH=function(x,y,tam){
+
+    }
+
+    this.casillasLibresV=function(x,y,tam){
+
+    }
+
+
     /**
      * Le pasa la posición de la casilla en la acción de disparo.
      * @param {int} x Posicion x
@@ -729,16 +738,18 @@ function Barco(nombre, tam) {
     this.desplegado = false;
     this.estado = "intacto";
     this.disparos = 0;//deprecated
+    this.casillas={};
 
-    this.posicion=function(){
+    this.posicion=function(x,y){
         this.x=x;
         this.y=y;
         this.desplegado=true;
+        this.iniCasillas();
     }
 
     //CORREGIR////////////////////////////////////////////////////////////////////
     this.colocar=function(tablero,x,y){
-
+        this.orientacion.colocarBarco(this,tablero,x,y);
     }
 
     /**
@@ -753,18 +764,11 @@ function Barco(nombre, tam) {
      * Comprueba si el barco a sido atacado o si ha sido hundido.
      */
     this.meDisparan = function(tablero,x,y) {
-        this.disparos++;
-       
-        /*if (this.disparos < this.tam) {
+
+        console.log(x,y);
+        if(this.casillas[x]=="intacto"){ //this.punto.x+x
             this.estado = "tocado";
-            console.log("Tocado");
-        } else {
-            this.estado = "hundido";
-            console.log("Hundido!!");
-        }*/
-        if(this.casillas[this.x+x]="intacto"){
-            this.estado = "tocado";
-            this.casillas[this.x+x]="tocado";
+            this.casillas[x]="tocado";
             console.log("Tocado");
         }
 
@@ -787,15 +791,18 @@ function Barco(nombre, tam) {
 
     this.comprobarCasillas=function(){
         for(i=0;i<tam;i++){
-            if(this.casillas[this.x+x]="intacto"){
+            if(this.casillas[this.x+i]=="intacto"){
                 return false;
             }
         }
+        return true;
     }
 
-    this.iniCasillas=function(tam){
-        for(i=0;i<tam;i++){
-            this.casillas[i]="intacto";
+  
+
+    this.iniCasillas=function(){
+        for(i=0;i<this.tam;i++){
+            this.casillas[i+this.x]="intacto";
         }
     }
 
@@ -820,10 +827,6 @@ function Barco(nombre, tam) {
             }
         }
     }
-
-
-
-    this.iniCasillas(tam);
 
 }
 

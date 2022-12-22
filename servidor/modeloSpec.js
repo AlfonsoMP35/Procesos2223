@@ -5,7 +5,7 @@ describe("Player", function() {
   var usr1,usr2;
 
   beforeEach(function() {
-    miJuego=new modelo.Juego();
+    miJuego=new modelo.Juego(true);
     miJuego.agregarUsuario("pepe");
     miJuego.agregarUsuario("luis");
     let res=miJuego.jugadorCreaPartida("pepe");
@@ -88,6 +88,7 @@ describe("Player", function() {
       expect(partida.turno.nick).toEqual("pepe");
   
       expect(usr2.flota["b2"].estado).toEqual("intacto");
+      expect(usr2.tableroPropio.casillas[0][0].contiene.estado).toEqual("intacto");
       usr1.disparar(0,0);
       expect(usr2.flota["b2"].estado).toEqual("tocado");
       usr1.disparar(1,0);
@@ -118,6 +119,15 @@ describe("Player", function() {
     it("Comprobar que no deja disparar sin turno",function(){
       usr2.disparar(0,0);
       expect(usr1.flota["b2"].estado).toEqual("intacto");
+    });
+
+    it("Comprobar dos disparos en el mismo lugar (barco) y no cambia de turno", function() {
+      expect(partida.turno.nick).toEqual("pepe");
+      usr1.disparar(0,0);
+      expect(usr2.obtenerEstadoMarcado("b2").toEqual("tocado"));
+      usr1.disparar(0,0);
+      expect(partida.turno.nick).toEqual("pepe");
+  
     });
   
   })

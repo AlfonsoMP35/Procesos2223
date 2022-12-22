@@ -63,6 +63,19 @@ function Cad(){
         });
     }
 
+    this.obtenerUsuarios=function(callback){
+        obtenerTodos(this.usuarios,callback);
+    }
+
+    this.obtenerOCrearUsuario=function(criterio,callback){
+        obtenerOCrear(this.usuarios,criterio,callback)
+    }
+
+    function obtenerOCrear(coleccion,){
+        
+    }
+
+
 
     //this.conectar();
 }
