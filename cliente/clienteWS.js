@@ -72,9 +72,15 @@ function ClienteWS(){
 
         });
 
-        this.socket.on("abandonarPartida",function(data){
+        this.socket.on("usuarioAbandona",function(data){
 			iu.mostrarModal("Jugador "+data.nick+" abandona");
 			iu.finPartida();
+		});
+
+        this.socket.on("usuarioSale",function(data){
+			iu.mostrarModal("Jugador "+data.nick+" abandona");
+			iu.finPartida();
+            rest.usuarioSale();
 		});
 
         this.socket.on("actualizarListaPartidas", function(lista){

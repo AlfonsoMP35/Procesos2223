@@ -51,10 +51,23 @@ function ServidorWS(){
                 }
             });
 
-            /*socket.on("abandonarPartida", function(nick,codigo){
-                let res = juego.usuarioSale(nick);
-                cli.enviarATodosEnPartida(io,codigoSTR,"partidaAbandonada",res);
-            });*/
+            socket.on("abandonarPartida",function(nick,codigo){
+                juego.jugadorAbandona(nick,codigo);
+                cli.enviarATodosEnPartida(io,codigo,"usuarioAbandona",{})
+            });
+
+            //REVISAR
+            socket.on("salirPartida",function(nick,codigo){
+                let lista = juego.obtenerPartidasDisponibles();
+              
+                res= {jugador:nick} 
+                if(codigo){
+                    let codigoStr = codigo.toString();              
+                    cli.enviarATodosEnPartida(io, codigoStr, "usuarioSale", res);
+                    cli.enviarATodos(socket, "actualizarListaPartidas", lista); 
+                }
+    
+            })
 
             socket.on("colocarBarco",function(nick,nombre,x,y){
                 let us = juego.obtenerUsuario(nick);
