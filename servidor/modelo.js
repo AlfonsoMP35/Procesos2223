@@ -332,6 +332,10 @@ function Usuario(nick, juego) {
         return this.tableroPropio.obtenerEstado(x, y);
     }
 
+    this.obtenerEstadoBarco=function(barco){
+        return barco.estado;
+    }
+
     /**
      * Devuelve el estado del jugador rival
      * @param {int} x Posicion x
