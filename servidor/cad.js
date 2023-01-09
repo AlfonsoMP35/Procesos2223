@@ -71,9 +71,17 @@ function Cad(){
         obtenerOCrear(this.usuarios,criterio,callback)
     }
 
-   /* function obtenerOCrear(coleccion,){
-        
-    }*/
+    function obtenerOCrear(coleccion,criterio,callback)
+    {
+        coleccion.findOneAndUpdate(criterio, {$set: criterio}, {upsert: true}, function(err,doc) {
+           if (err) { throw err; }
+           else { 
+                console.log("Updated"); 
+                callback(doc);
+            }
+         });  
+    }
+    
 
 
 
