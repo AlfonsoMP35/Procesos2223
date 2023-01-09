@@ -205,7 +205,7 @@ let cad=require("./cad.js");
 		}
 	}
 
-    if(!test){
+    if(test == "false"){
         this.cad.conectar(function(db){
             console.log("Conectando a Mongo");
         })
