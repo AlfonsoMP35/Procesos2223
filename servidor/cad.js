@@ -45,7 +45,7 @@ function Cad(){
 
     this.conectar=function(){
         let cad=this;
-        mongo.connect("mongodb+srv://patata:<patata>@cluster0.sziburb.mongodb.net/?retryWrites=true&w=majority",{ useUnifiedTopology: true },function(err,database){
+        mongo.connect("mongodb+srv://patata:patata@cluster0.sziburb.mongodb.net/?retryWrites=true&w=majority",{ useUnifiedTopology: true },function(err,database){
             if(!err){
                 database.db("Procesos22").collection("logs",function(err,col){
                     if (err){
