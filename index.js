@@ -1,6 +1,7 @@
 const fs=require("fs");
 const express = require('express');
 const app = express();
+const passport = require('passport');
 
 const http = require('http');
 const server = http.createServer(app);
@@ -16,15 +17,52 @@ var args = process.argv.slice(2);
 
 let juego = new modelo.Juego(args[0]);
 let servidorWS=new sWS.ServidorWS();
+const cookieSession=require("cookie-session");
+require("./servidor/passport-setup.js");
 
 
 app.use(express.static(__dirname + "/"));
+
+app.use(cookieSession({
+  name: 'Batalla Naval',
+  keys: ['key1', 'key2']
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 
 app.get("/", function(request,response){
 	var contenido=fs.readFileSync(__dirname+"/cliente/index.html");
 	response.setHeader("Content-type","text/html");
 	response.send(contenido);
 });
+
+app.get("/auth/google",passport.authenticate('google', { scope: ['profile','email'] }));
+
+app.get('/google/callback', 
+  passport.authenticate('google', { failureRedirect: '/fallo' }),
+  function(req, res) {
+    // Successful authentication, redirect home.
+    res.redirect('/good');
+});
+
+app.get("/good", function(request,response){
+  var nick=request.user.emails[0].value;
+  if (nick){
+    juego.agregarUsuario(nick);
+  }
+  response.cookie('nick',nick);
+  response.redirect('/');
+});
+
+app.get("/fallo",function(request,response){
+  response.send({nick:"nook"})
+})
+
+
+//estrategia local
+//"/auth/github"
 
 app.get("/agregarUsuario/:nick",function(request,response){
   let nick = request.params.nick;
@@ -77,13 +115,9 @@ app.get("/obtenerLogs", function(request,response){
   })
 })
 
-/*app.listen(PORT, () => {
-  console.log('App está escuchando en el puerto ${PORT}');
-  console.log('Ctrl+C para salir.');
-});*/
 
 server.listen(PORT, () => {
-  console.log(`App está escuchando en el puerto ${PORT}`);
+  console.log('App está escuchando en el puerto ${PORT}');
   console.log('Ctrl+C para salir');
 });
 
