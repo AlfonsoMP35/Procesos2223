@@ -27,7 +27,8 @@ function ServidorWS(){
                 let codigoStr=res.codigo.toString();
                 socket.join(codigoStr);
                 //cli.enviarAlRemitente(socket, "partidaCreada", res);
-                cli.enviarATodosEnPartida(io,codigoStr,"partidaCreada",res)
+                cli.enviarATodosEnPartida(io,codigoStr,"partidaCreada",res);
+                cli.enviarAlRemitente(socket, "esperandoRival");
                 let lista=juego.obtenerPartidasDisponibles();
                 cli.enviarATodos(socket,"actualizarListaPartidas", lista);
             });
@@ -51,6 +52,7 @@ function ServidorWS(){
                 }
             });
 
+            //Revisar modelo.js
             socket.on("abandonarPartida",function(nick,codigo){
                 juego.jugadorAbandona(nick,codigo);
                 cli.enviarATodosEnPartida(io,codigo,"usuarioAbandona",{})
@@ -74,7 +76,7 @@ function ServidorWS(){
                 if(us){
                     us.colocarBarco(nombre,x,y);
                     let desplegado=us.obtenerBarcoDesplegado(nombre);
-                    let res={barco:nombre,colocado:desplegado, x:x , y:y};
+                    let res={barco:nombre, x: x, y: y, colocado: desplegado };
                     cli.enviarAlRemitente(socket,"barcoColocado",res);
                 }
             });
@@ -90,6 +92,9 @@ function ServidorWS(){
                         cli.enviarATodosEnPartida(io,codigoStr,"aJugar",res);
                     } 
                 }
+                else {
+                    cli.enviarAlRemitente(socket, "esperandoRival")
+                }
             });
 
             socket.on("disparar",function(nick,x,y){
@@ -101,15 +106,15 @@ function ServidorWS(){
                     let estado = us.obtenerEstadoMarcado(x,y);
                     let partida=us.partida;
                     let codigoStr=partida.codigo.toString();
-                    let res={impacto:estado,x:x,y:y,turno:partida.turno.nick};
+                    let res={impacto:estado,x:x,y:y,turno:partida.turno.nick,atacante: nick};
                     cli.enviarATodosEnPartida(io,codigoStr,"disparo",res);
-                    if(partida.esFinal()){
+                    if(partida.fase == "final"){
                         cli.enviarATodosEnPartida(io,codigoStr,"finPartida",res);
                     }
                 }
-                else{
+                /*else{
                     cli.enviarAlRemitente(io, "info", "No es tu turno");
-                }
+                }*/
             });
 
             

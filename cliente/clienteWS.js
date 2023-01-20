@@ -24,7 +24,7 @@ function ClienteWS(){
 	}
 
     this.salir=function(){
-        this.socket.emit("salirPartida",rest.nick);
+        this.socket.emit("salirPartida",rest.nick,cws.codigo);
     }
 
     this.colocarBarco=function(nombre,x,y){
@@ -72,9 +72,24 @@ function ClienteWS(){
 
         });
 
+        //Menú previo a la partida
+        this.socket.on("esperandoRival",function(){
+			console.log("Esperando rival");
+			iu.mostrarEsperandoRival();
+		})
+
+
         this.socket.on("usuarioAbandona",function(data){
-			iu.mostrarModal("Jugador "+data.nick+" abandona");
-			iu.finPartida();
+			//iu.finPartida();
+            if (res.codigoP != -1) {
+
+                console.log(res.nombre + " ha abandonado la partida con codigo: " + res.codigoP  + " Ha ganado " + res.nombreR)
+				//console.log(data)
+                
+					
+                iu.mostrarModal("Batalla Naval", res.nombre+" ha abandonado la partida , Ha ganado " + res.nombreR);
+				iu.mostrarHome();
+            }
 		});
 
         this.socket.on("usuarioSale",function(data){
@@ -97,9 +112,10 @@ function ClienteWS(){
 
         this.socket.on("faseDesplegando",function(data){
             tablero.flota=data.flota; //array asociativo (diccionario)
-			//tablero.mostrar(true);
-			//tablero.mostrarFlota();//data.flota);
+            tablero.elementosGrid();
+			tablero.mostrarFlota();
             console.log("Ya puedes desplegar la flota.");
+            iu.mostrarModal("Batalla Naval","Ya puedes desplegar la flota");
         });
 
         this.socket.on("disparo",function(res){
@@ -107,6 +123,8 @@ function ClienteWS(){
 			console.log("Turno: "+res.turno);
 			if (res.atacante==rest.nick){
 				tablero.updateCell(res.x,res.y,res.impacto,'computer-player');
+			}else{
+				tablero.updateCell(res.x,res.y,res.impacto,'human-player');	
 			}
 		});
 
