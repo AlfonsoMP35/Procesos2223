@@ -36,7 +36,7 @@
 	    	<div id="listaPartidas"></div>
 	    </div>
 	  </div>
-	 <div class="row">
+	 <!--div class="row">
 	 	<div clas="col-2">
 	 		<h2>Barcos</h2>
 	 		<ul class="fleet-roster">
@@ -54,7 +54,7 @@
 				</div>
 	  	</div>
 	  </div>
-	</div>
+	</div-->
 
 	<div class="modal" id="miModal">
       <div class="modal-dialog">
@@ -76,9 +76,10 @@
 		rest=new ClienteRest();
 		iu=new ControlWeb();
 		cws=new ClienteWS();
-		//iu.mostrarAgregarUsuario();		
+		//iu.mostrarAgregarUsuario();	
+		iu.comprobarCookie();	
 		tablero=new Tablero(10);
-		iu.comprobarCookie();
+		
 	</script>
 </body>
 </html>

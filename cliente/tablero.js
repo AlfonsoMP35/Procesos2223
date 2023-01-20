@@ -21,11 +21,6 @@
 			//humanCells[k].addEventListener('mouseover', this.placementMouseover, false);
 			//humanCells[k].addEventListener('mouseout', this.placementMouseout, false);
 		}
-        var playerRoster = document.querySelector('.fleet-roster').querySelectorAll('li');
-		for (var i = 0; i < playerRoster.length; i++) {
-			playerRoster[i].self = this;
-			playerRoster[i].addEventListener('click', this.rosterListener, false);
-		}
 
 		var computerCells = document.querySelector('.computer-player').childNodes;
 		for (var j = 0; j < computerCells.length; j++) {
@@ -33,19 +28,13 @@
 			computerCells[j].addEventListener('click', this.shootListener, false);
 		}
 
-    }
+        var playerRoster = document.querySelector('.fleet-roster').querySelectorAll('li');
+		for (var i = 0; i < playerRoster.length; i++) {
+			playerRoster[i].self = this;
+			playerRoster[i].addEventListener('click', this.rosterListener, false);
+		}
 
-    /**
-     * Mostrar el tablero
-     */
-    this.mostrarTablero=function(){
-		let x=document.getElementById("tablero");
-		if (si){
-			x.style.display="block";
-		}
-		else{
-			x.style.display="none";
-		}
+
 
     }
 
@@ -56,11 +45,6 @@
 		var gridDiv = document.querySelectorAll('.grid');	
 
 		for (var grid = 0; grid < gridDiv.length; grid++) {
-			//gridDiv[grid].removeChild(gridDiv[grid].querySelector('.no-js')); // Removes the no-js warning
-			/*let myNode=gridDiv[grid];
-			while (myNode.lastElementChild) {
-			    myNode.removeChild(myNode.lastElementChild);
-			  }*/
 			for (var i = 0; i < this.size; i++) {
 				for (var j = 0; j < this.size; j++) {
 					var el = document.createElement('div');
@@ -82,27 +66,53 @@
 			var y = parseInt(e.target.getAttribute('data-y'), 10);
 			console.log("Barco: " +self.nombreBarco+" x: "+x+" y: "+y);
 			
-			// Don't screw up the direction if the user tries to place again.
-			var successful = self.colocarBarco(self.nombreBarco, x, y);
+			self.colocarBarco(x, y, self.nombreBarco);
+			//var successful = self.colocarBarco(self.nombreBarco, x, y);
 
 		}
 	};
 
-	this.shootListener = function(e) {
+	this.asignarFlotaListener=function(){
+		var playerRoster = document.querySelector('.fleet-roster').querySelectorAll('li');
+		for (var i = 0; i < playerRoster.length; i++) {
+			playerRoster[i].self = this;
+			playerRoster[i].addEventListener('click', this.rosterListener, false);
+		}
+	}
 
-		// Extract coordinates from event listener
+	this.shootListener = function(e) {
 		var x = parseInt(e.target.getAttribute('data-x'), 10);
 		var y = parseInt(e.target.getAttribute('data-y'), 10);
 		console.log("Disparo en x: "+x+" y: "+y);
 		cws.disparar(x,y);	
 	};
 
+	
+	/** Mostrar la flota */
+	this.mostrarFlota=function(){
+		$('#mER').remove();
+		$("#listaF").remove();
+		let cadena='<ul class="fleet-roster" id="listaF">';
+		for (let key in this.flota){
+			cadena=cadena+"<li id='"+key+"'>"+key+"</li>"
+		}
+		cadena=cadena+"</ul>";
+		$('#flota').append(cadena);
+		//<ul>
+		//	cadena=cadena+'<li id="b2">b2</li>'
+		//</ul>
+		this.asignarFlotaListener();
+	}
 
-
-	this.colocarBarco=function(nombre,x,y){
+	this.colocarBarco=function(x,y,nombre){
 		console.log("Barco: " +nombre+" x: "+x+" y: "+y);
 		cws.colocarBarco(nombre,x,y);
 	}
+
+	this.endPlacing = function(shipType) {
+		document.getElementById(shipType).setAttribute('class', 'placed');
+		self.placingOnGrid = false;
+	};
 
 	this.rosterListener = function(e) {
 		var self = e.target.self;
@@ -122,20 +132,6 @@
 		self.placingOnGrid = true;
 	};
 
-	/*this.terminarDeColocarBarco=function(barco,x,y){
-		for(i=0;i<barco.tam;i++){
-			console.log("x: "+(x+i)+" y:"+y);
-			this.updateCell(x+i,y,"ship",'human-player');
-		}
-		self.endPlacing(barco.nombre);
-	}*/
-
-	this.endPlacing = function(shipType) {
-		document.getElementById(shipType).setAttribute('class', 'placed');
-		this.nombreBarco = '';
-	};
-
-
     this.updateCell = function(x, y, type,targetPlayer) {
 		var player=targetPlayer;
 		var classes = ['grid-cell', 'grid-cell-' + x + '-' + y, 'grid-' + type];
@@ -143,21 +139,24 @@
 	};
 
 	this.puedesColocarBarco=function(barco, x, y){
-		//obtener el barco a partir del nombre
-		//bucle del tamaño del barco que marque las celdas
-		//let barco = this.flota[data.nombre];
 		console.log(barco);
 		for(i=0;i<barco.tam;i++){
 			this.updateCell(x+i,y,'ship','human-player');
 		}
-		//this.placingOnGrid=false;
 		this.endPlacing(barco.nombre);
 
 	};
 
-
-    this.crearGrid();
-	//this.mostrar(false);
+	this.elementosGrid=function(){
+		$('#gc').remove();
+		let cadena='<div class="game-container" id="gc">';
+		cadena=cadena+'<div id="roster-sidebar">';
+	 	cadena=cadena+'<h4>Barcos</h4><div id="flota"></div></div><div class="grid-container"><h2>Tu flota</h2>';
+		cadena=cadena+'<div class="grid human-player"></div></div><div class="grid-container">';
+		cadena=cadena+'<h2>Flota enemiga</h2><div class="grid computer-player"></div></div></div>';
+		$('#ancla').append(cadena);
+		this.crearGrid();
+	}
 }
 
 //colocar en el indes.html los class grid
