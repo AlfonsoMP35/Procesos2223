@@ -148,8 +148,8 @@
 	};
 
 	this.elementosGrid=function(){
-		$('#gc').remove();
-		let cadena='<div class="game-container" id="gc">';
+		$('#eG').remove();
+		let cadena='<div class="game-container" id="eG">';
 		cadena=cadena+'<div id="roster-sidebar">';
 	 	cadena=cadena+'<h4>Barcos</h4><div id="flota"></div></div><div class="grid-container"><h2>Tu flota</h2>';
 		cadena=cadena+'<div class="grid human-player"></div></div><div class="grid-container">';
