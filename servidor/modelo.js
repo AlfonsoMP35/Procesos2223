@@ -892,7 +892,8 @@ function Agua() {
      * Pone el estado en "agua".
      */
     this.obtenerEstado = function (x,y) {
-        return "agua";
+       // return "agua";
+       return this.estado;
     }
 }
 

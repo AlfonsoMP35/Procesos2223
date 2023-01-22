@@ -122,8 +122,8 @@
 		self.placingOnGrid = true;
 	};
 
-    this.updateCell = function(x, y, type,targetPlayer) {
-		var player=targetPlayer;
+    this.updateCell = function(x, y, type,target) {
+		var player=target;
 		var classes = ['grid-cell', 'grid-cell-' + x + '-' + y, 'grid-' + type];
 		document.querySelector('.' + player + ' .grid-cell-' + x + '-' + y).setAttribute('class', classes.join(' '));
 	};
@@ -131,7 +131,7 @@
 	this.puedesColocarBarco=function(barco, x, y){
 		console.log(barco);
 		for(i=0;i<barco.tam;i++){
-			this.updateCell(x+i,y,'ship','human-player');
+			this.updateCell(x+i,y,"ship",'human-player');
 		}
 		this.endPlacing(barco.nombre);
 

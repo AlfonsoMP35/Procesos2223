@@ -129,7 +129,7 @@ function ClienteWS(){
         this.socket.on("finPartida",function(res){
 			console.log("Fin de la partida");
 			console.log("Ganador: "+res.turno);
-			iu.mostrarModal("Fin de la partida. Ganador: "+res.turno);
+			iu.mostrarModal("Fin de la partida", "Fin de la partida. Ganador: "+res.turno);
 			iu.finPartida();
 		});
 
