@@ -28,8 +28,8 @@ let cad=require("./cad.js");
                     console.log("Usuario creado");
                 })
             }
-            this.insertarLog({"operacion":"agregarUsuario","usuario":nick,"fecha":Date()},function(){
-                console.log("Registro de log insertado -> Agregar Usuario");
+            this.insertarLog({"operacion":"Iniciar Sesion","usuario":nick,"fecha":Date()},function(){
+                console.log("Registro de log insertado -> Iniciar sesion");
             });
         }
         return res;
@@ -52,8 +52,8 @@ let cad=require("./cad.js");
             this.finalizarPartida(nick);
             this.eliminarUsuario(nick);
 
-            this.insertarLog({"operacion":"eliminarUsuario","propietario":nick,"fecha":Date()},function(){
-				console.log("Registro  de log insertado(eliminarUsuario)")
+            this.insertarLog({"operacion":"Usuario Sale","propietario":nick,"fecha":Date()},function(){
+				console.log("Registro  de log insertado -> Eliminar Usuario")
 			})
         }
     }
@@ -69,7 +69,6 @@ let cad=require("./cad.js");
 
         if (usr) {
             let codigo = usr.crearPartida();
-            //let codigo = this.crearPartida(usr);
             res = { codigo: codigo };
         }
         return res;
@@ -82,12 +81,9 @@ let cad=require("./cad.js");
      * @returns {int} Codigo de la partida
      */
     this.crearPartida = function (usr) {
-        //obtener código único
-        //crear la partida con propietario nick
-        //devolver el código
         let codigo = Date.now();
         console.log("Usuario " + usr.nick + " crea partida " + codigo);
-        this.insertarLog({"operacion":"crearPartida","propietario":usr.nick,"fecha":Date()},function(){
+        this.insertarLog({"operacion":"Crear Partida","propietario":usr.nick,"fecha":Date()},function(){
             console.log("Registro de log insertado -> Crear Partida");
         });
         this.partidas[codigo] = new Partida(codigo, usr);
@@ -104,8 +100,8 @@ let cad=require("./cad.js");
         let res = -1;
         if (this.partidas[codigo]) {
             res = this.partidas[codigo].agregarJugador(usr);
-            this.insertarLog({"operacion":"unirAPartida","codigo":codigo,"fecha":Date()},function(){
-                console.log("Registro de log insertado -> Unir A Partidad");
+            this.insertarLog({"operacion":"Unir A Partida","codigo":codigo,"propietario":usr.nick,"fecha":Date()},function(){
+                console.log("Registro de log insertado -> Unir A Partida");
             });
         }
         else {
@@ -126,7 +122,6 @@ let cad=require("./cad.js");
 
         if (usr) {
             let valor = usr.unirAPartida(codigo);
-            //let valor = this.unirseAPartida(codigo,usr);
             res = {"codigo": valor};
         }
         return res;
@@ -148,10 +143,10 @@ let cad=require("./cad.js");
      * @returns {array} Lista de partidas
      */
     this.obtenerPartidas = function () {
-        let lista;
+        let lista=[];
 
         for (let key in this.partidas) { //for(i=0;i++;i<this.partidas.lenght;)
-            lista.push({ "codigo": key, "owner": this.partidas[codigo].owner })
+            lista.push({ "codigo": key, "owner": this.partidas[key].owner.nick })
         }
         return lista;
     }
@@ -178,12 +173,19 @@ let cad=require("./cad.js");
         for (let key in this.partidas) {
             if (this.partidas[key].fase == "inicial" && this.partidas[key].estoy(nick)) {
                 this.partidas[key].fase = "final";
-                this.insertarLog({"operacion":"finalizarPartida","usuario":nick,"fecha":Date()},function(){
-                    console.log("Registro de log insertado -> Finalizar Partida (Abandona o Sale)");
+                this.insertarLog({"operacion":"Finalizar Partida","usuario":nick,"fecha":Date()},function(){
+                    console.log("Registro de log insertado -> Finalizar Partida");
                 });
             }
         }
     }
+
+    this.abandonarPartida = function (nick, codigo) {
+		this.insertarLog({ "operacion": "Abandonar Partida", "propietario": nick, "fecha": Date() }, function () {
+			console.log("Registro de log insertado -> Abandonar Partida");
+		});
+		return this.eliminarPartida(codigo); //Revisar
+	}
 
     /**
      * Obtiene la partida al pasarle un codigo
@@ -211,8 +213,6 @@ let cad=require("./cad.js");
         })
     }
 
-
-    //this.cad.conectar();
 }
 
 
@@ -258,10 +258,11 @@ function Usuario(nick, juego) {
      * Inicializa los barcos de la partida.
      */
     this.inicializarFlota = function () {
-        //this.flota.push(new Barco("b2",2));
-        // this.flota.push(new Barco("b4",4));
-        this.flota["b2"] = new Barco("b2", 2);
-        this.flota["b4"] = new Barco("b4", 4);
+        this.flota["Fragata(1)"] = new Barco("Fragata(1)", 1);
+        this.flota["Destructor(2)"] = new Barco("Destructor(2)", 2);
+        this.flota["Submarino(3)"] = new Barco("Submarino(3)", 3);
+        this.flota["Acorazado(3)"] = new Barco("Acorazado(3)", 3);
+        this.flota["Portaviones(4)"] = new Barco("Portaviones(4)", 4);
         //otros barcos ...
     }
 
@@ -277,9 +278,7 @@ function Usuario(nick, juego) {
         if (this.partida && this.partida.fase == "desplegando") {
             let barco = this.flota[nombre];
             this.tableroPropio.colocarBarco(barco, x, y);
-
-        };
-        
+        };       
     }
 
     /**
@@ -332,9 +331,9 @@ function Usuario(nick, juego) {
         return this.tableroPropio.obtenerEstado(x, y);
     }
 
-    this.obtenerEstadoBarco=function(barco){
+    /*this.obtenerEstadoBarco=function(barco){
         return barco.estado;
-    }
+    }*/
 
     /**
      * Devuelve el estado del jugador rival
@@ -377,8 +376,10 @@ function Usuario(nick, juego) {
         return true;
     }
 
-    this.insertarLog = function(log, callback){
-
+	this.logAbandonarPartida = function(jugador,codigo){
+        this.juego.insertarLog({ "operacion": "Abandonar Partida", "usuario":jugador.nick, "fecha": Date() }, function () {
+			console.log("Registro de log insertado -> Abandonar Partida");
+		});
     }
 
 }
@@ -406,7 +407,7 @@ function Partida(codigo, usr) {
             this.jugadores.push(usr);
             console.log(usr.nick + " se ha unido a la partida");
             usr.partida = this;
-            usr.inicializarTableros(5);
+            usr.inicializarTableros(10);
             usr.inicializarFlota();
             this.comprobarFase();
         }
@@ -493,8 +494,7 @@ function Partida(codigo, usr) {
     /**
      * Asigna el turno inicial al primer jugador de la lista
      */
-    this.asignarTurnoInicial = function () {
-        
+    this.asignarTurnoInicial = function () {       
         this.turno = this.jugadores[0];
         console.log("Turno: " +this.turno.nick);
     }
@@ -546,12 +546,12 @@ function Partida(codigo, usr) {
      */
     this.disparar = function (nick, x, y) {
         let atacante = this.obtenerJugador(nick);
-        console.log("Atacante: " + atacante.nick);
+        //console.log("Atacante: " + atacante.nick);
         if (this.turno.nick == atacante.nick) {
             let atacado = this.obtenerRival(nick);
             let estado=atacado.meDisparan(x,y);
             //console.log("Atacado: " + atacado.nick);
-            atacado.meDisparan(x, y);
+            //atacado.meDisparan(x, y);
             //let estado = atacado.obtenerEstado(x, y);
             //console.log("Estado: " + estado)
             atacante.marcarEstado(estado, x, y);
@@ -574,13 +574,19 @@ function Partida(codigo, usr) {
         }
     }
 
-    this.jugadorAbandona=function(nick,codigo){
-        if(this.partidas[codigo]){
-            this.partidas[codigo].fase="final";
-            console.log(nick +" abandona la partida.");
+    this.abandonarPartida = function (jugador) {
+        if (jugador) {
+			rival = this.obtenerRival(jugador.nick)
+			this.fase = "final";
+			console.log("Fin de la partida");
+		    console.log("Ha abandonado el jugador " + jugador.nick);
+				if(rival){
+				    console.log("Ganador: " + rival.nick);
+            	}						
+            jugador.logAbandonarPartida(jugador,this.codigo);			
         }
-    }
 
+    }
 
     /**
      * Agrega al creador de la partida a la partida.
@@ -662,14 +668,13 @@ function Tablero(size) {
         return true;
     }
 
-    this.casillasLibresH=function(x,y,tam){
+    /*this.casillasLibresH=function(x,y,tam){
 
     }
 
     this.casillasLibresV=function(x,y,tam){
 
-    }
-
+    }*/
 
     /**
      * Le pasa la posición de la casilla en la acción de disparo.
@@ -700,6 +705,11 @@ function Tablero(size) {
         this.casillas[x][y].contiene.estado = estado;
     }
 
+    /**
+     * Cambia el estado de la casilla a Agua.
+     * @param {int} x Posicion x
+     * @param {int} y Posicion y
+     */
     this.ponerAgua=function(x,y){
         this.casillas[x][y].contiene = new Agua();
     }
@@ -744,6 +754,11 @@ function Barco(nombre, tam) {
     this.disparos = 0;//deprecated
     this.casillas={};
 
+    /**
+     * Define la posición del barco y lo marca como colocado.
+     * @param {int} x Posicion x
+     * @param {int} y Posicion y
+     */
     this.posicion=function(x,y){
         this.x=x;
         this.y=y;
@@ -751,7 +766,12 @@ function Barco(nombre, tam) {
         this.iniCasillas();
     }
 
-    //CORREGIR////////////////////////////////////////////////////////////////////
+    /**
+     * Permite cambiar la orientación del barco
+     * @param {Object} tablero Estado de la casilla
+     * @param {int} x Posicion x
+     * @param {int} y Posicion y
+     */
     this.colocar=function(tablero,x,y){
         this.orientacion.colocarBarco(this,tablero,x,y);
     }
@@ -770,11 +790,11 @@ function Barco(nombre, tam) {
     this.meDisparan = function(tablero,x,y) {
 
         console.log(x,y);
-        if(this.casillas[x]=="intacto"){ //this.punto.x+x
+        //if(this.casillas[x]=="intacto"){ //this.punto.x+x
             this.estado = "tocado";
             this.casillas[x]="tocado";
             console.log("Tocado");
-        }
+        //}
 
         if(this.comprobarCasillas()){
             this.estado = "hundido";
@@ -802,8 +822,9 @@ function Barco(nombre, tam) {
         return true;
     }
 
-  
-
+    /**
+     * Inicia todas las casillas a intacto.
+     */
     this.iniCasillas=function(){
         for(i=0;i<this.tam;i++){
             this.casillas[i+this.x]="intacto";
@@ -831,6 +852,13 @@ function Barco(nombre, tam) {
             }
         }
     }
+
+    this.esHorizontal = function(){
+		return true;
+	}
+	this.esVertical = function(){
+		return false;
+	}
 
 }
 

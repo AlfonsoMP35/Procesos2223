@@ -160,7 +160,7 @@ function ControlWeb(){
 		cadena += "<div class='col-11'>"
 		cadena += '<ul class="list-group">';
 		for(i=0;i<lista.length;i++){
-		  cadena += '<li class="list-group-item"><a href="#" class="btn btn-success" value="'+lista[i].codigo+'"> Nick propietario: '+lista[i].owner+'</a></li>';
+		  cadena += '<li class="list-group-item"><a href="#" class="btn btn-primary" value="'+lista[i].codigo+'"> Nick propietario: '+lista[i].owner+'</a></li>';
 		  cadena += '<li class="list-group-item centrado"> Codigo de la partida: '+lista[i].codigo+ '</li>';
 		}
 		cadena += "</ul>";
