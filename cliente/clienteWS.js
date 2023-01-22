@@ -83,7 +83,7 @@ function ClienteWS(){
 			//iu.finPartida();
             if (res.codigoP != -1) {
                 console.log(res.nombre + " ha abandonado la partida con codigo: " + res.codigoP  + " Ha ganado " + res.nombreR)
-                iu.mostrarModal("Batalla Naval", res.nombre+" ha abandonado la partida , Ha ganado " + res.nombreR);
+                iu.mostrarModal("Batalla Naval", res.nombre+" ha abandonado la partida. Ha ganado " + res.nombreR+ " .");
 				iu.mostrarHome();
             }
 		});
@@ -97,6 +97,7 @@ function ClienteWS(){
         this.socket.on("aJugar",function(res){
 			if (res.fase=="jugando"){
 				console.log("A jugar, le toca a: "+res.turno);
+                iu.mostrarModal("Batalla Naval","A jugar! Turno de "+res.turno);
 			}
 		});
 
@@ -109,8 +110,11 @@ function ClienteWS(){
         });
 
         this.socket.on("disparo",function(res){
-			console.log(res.impacto);
+			//console.log(res.impacto);
 			console.log("Turno: "+res.turno);
+            if(res.atacante==rest.turno){
+				iu.mostrarModal("Atención","No es tu turno");
+			}
 			if (res.atacante==rest.nick){
 				tablero.updateCell(res.x,res.y,res.impacto,'computer-player');
 			}else{
@@ -137,7 +141,7 @@ function ClienteWS(){
 				cli.barcosDesplegados();
 			}
 			else{
-				iu.mostrarModal("No se puede colocar barco");
+				iu.mostrarModal("Atención","No se puede colocar barco");
 			}
 		});
 
