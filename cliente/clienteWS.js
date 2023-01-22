@@ -24,7 +24,7 @@ function ClienteWS(){
 	}
 
     this.salir=function(){
-        this.socket.emit("salirPartida",rest.nick,cws.codigo);
+        this.socket.emit("usuarioSale",rest.nick,cws.codigo);
     }
 
     this.colocarBarco=function(nombre,x,y){
@@ -79,23 +79,13 @@ function ClienteWS(){
 		})
 
 
-        this.socket.on("usuarioAbandona",function(data){
+        this.socket.on("usuarioAbandona",function(res){
 			//iu.finPartida();
             if (res.codigoP != -1) {
-
                 console.log(res.nombre + " ha abandonado la partida con codigo: " + res.codigoP  + " Ha ganado " + res.nombreR)
-				//console.log(data)
-                
-					
                 iu.mostrarModal("Batalla Naval", res.nombre+" ha abandonado la partida , Ha ganado " + res.nombreR);
 				iu.mostrarHome();
             }
-		});
-
-        this.socket.on("usuarioSale",function(data){
-			iu.mostrarModal("Jugador "+data.nick+" abandona");
-			iu.finPartida();
-            rest.usuarioSale();
 		});
 
         this.socket.on("actualizarListaPartidas", function(lista){
@@ -150,6 +140,10 @@ function ClienteWS(){
 				iu.mostrarModal("No se puede colocar barco");
 			}
 		});
+
+        this.socket.on("partidaCancelada", function (res) {
+            iu.mostrarHome();
+        });
 
     }
 

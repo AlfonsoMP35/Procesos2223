@@ -117,7 +117,7 @@ app.get("/obtenerLogs", function(request,response){
 
 
 server.listen(PORT, () => {
-  console.log('App está escuchando en el puerto ${PORT}');
+  console.log('App está escuchando en el puerto ' + PORT);
   console.log('Ctrl+C para salir');
 });
 

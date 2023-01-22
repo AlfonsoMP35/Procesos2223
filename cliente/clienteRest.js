@@ -121,10 +121,5 @@ function ClienteRest(){
 		})
 	}
 
-	//////////////////////////////////////////////////
-	/*this.usuarioAbandona=function(){
-
-	}*/
-
 }
 

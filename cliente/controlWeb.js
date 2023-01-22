@@ -124,17 +124,17 @@ function ControlWeb(){
 		cadena = cadena + '</div> </div>'
 		$('#codigo').append(cadena);
 		$("#botAP").on("click", function (e) {
-		cws.abandonarPartida();
-	   })
+			cws.abandonarPartida();
+	   	})
 
    }
 
 	this.finPartida=function(){
-		$('#mH').remove()
+		$('#mH').remove();
 		cws.codigo = undefined;
 		$('#eG').remove();
 		tablero = new Tablero(10);
-		this.mostrarHome()
+		this.mostrarHome();
 	}
 
 	this.mostrarListaDePartidas=function(lista){

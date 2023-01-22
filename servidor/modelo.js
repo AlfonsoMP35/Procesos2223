@@ -517,7 +517,7 @@ function Partida(codigo, usr) {
         let jugador;
         for (i = 0; i < this.jugadores.length; i++) {
             if (this.jugadores[i].nick == nick) {
-                return this.jugadores[i];
+                jugador = this.jugadores[i];
             }
         }
         return jugador;
@@ -532,7 +532,7 @@ function Partida(codigo, usr) {
         let rival;
         for (i = 0; i < this.jugadores.length; i++) {
             if (this.jugadores[i].nick != nick) {
-                return this.jugadores[i];
+                rival = this.jugadores[i];
             }
         }
         return rival;
