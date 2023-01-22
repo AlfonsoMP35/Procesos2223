@@ -1,5 +1,5 @@
 function ControlWeb(){
-	$('body').css('background-color','#0D2BA5');
+	$('body').css('background-color','#FFFFFF');
 	
 	this.mostrarAgregarUsuario=function(){
 		$('#tB').remove();
@@ -33,18 +33,16 @@ function ControlWeb(){
         cadena +=' </div>';
         cadena +=' </div>';
         cadena +='</div>';
-        cadena +='<img id="tB3" src="cliente/img/" alt="image" class="img-fluid" style="margin-bottom:20px;">'; //Añadir imagen
+        cadena +='<img id="tB3" src="cliente/img/batalla-naval.jpg" alt="image" class="img-fluid" style="margin-bottom:20px;">';
         cadena +='<div class="row">';
         cadena +=' <div class="col-12 text-center">';
         cadena +=' <div class="row justify-content-center">';
-        cadena +='<div class="row" id="tB4"><h7><strong>Escuela Superior de Ingeniería Informática de la Universidad de Castilla - La Mancha</strong></h7></div>'
+        cadena +='<div class="row" id="tB4"><h7><strong>Escuela Superior de Ingeniería Informática - UCLM</strong></h7></div>'
         cadena+='</div>';
-       // cadena +='<div class="row" id="tB2"><h7><strong>!IMPORTANTE!</strong>: Esta app se basa en el Proyecto de la Asignatura de PROCESOS DE INGENIERÍA DEL SOFTWARE de Jose Antonio Gallud Lázaro (2022)</h7></div>'
         cadena += ' </div>';
         cadena += '</div>';
 
-		$("#agregarUsuario").append(cadena);     
-		//$("#nota").append("<div id='aviso' style='text-align:right'>Inicia sesión con Google para jugar</div>");    
+		$("#agregarUsuario").append(cadena);       
 
 		$("#btnAU").on("click",function(e){
 			if ($('#usr').val() === '' || $('#usr').val().length>12) {
@@ -94,12 +92,6 @@ function ControlWeb(){
 			$('#eG').remove();
 		});
 	}
-
-	/*this.salir=function(nick){
-		iu.mostrarModal("Has cerrado sesión.");
-		$.removeCookie("nick");
-		iu.comprobarCookie();
-	}*/
 	
 	this.mostrarCrearPartida=function(){
 		$('#mCP').remove();
@@ -119,20 +111,12 @@ function ControlWeb(){
 		})
 	}
 	this.mostrarCodigo=function(codigo){
-		/*let cadena="<div id='mostrarCP'><p>Código de la partida: "+codigo+"</p>";
-		cadena=cadena+'<button id="btnAP" class="btn btn-primary mb-2 mr-sm-2">Abandonar partida</button>';
-		cadena=cadena+"</div>";*/
 		let cadena="Codigo de la partida: " + codigo;
-
 		$('#codigo').append(cadena);
 		iu.mostrarAbandonar();
-		/*$('#btnAP').on("click",function(e){
-			cws.abandonarPartida();
-			iu.finPartida();
-		});*/
 	}
 
-	this.mostrarAbandonarPartida = function(){
+	this.mostrarAbandonar = function(){
 		$('#mAbP').remove();
 		let cadena = '<div class="row" id="mAbP">';
 		cadena = cadena + '<div style="margin-top:15px" class="col">'
@@ -190,7 +174,7 @@ function ControlWeb(){
 			if (codigo){
 				$('#mLP').remove();
 				$('#mCP').remove();
-				$('#btnS').remove();
+				$('#botS').remove();
 				cws.unirseAPartida(codigo);
 			}
 		});	
@@ -217,19 +201,17 @@ function ControlWeb(){
 		if($.cookie("nick")){
 			rest.nick=$.cookie("nick");
 			rest.comprobarUsuario();
-			//cws.conectar();
-			//this.mostrarHome();
 		}else{
 			this.mostrarAgregarUsuario();
 		}
 	}
 
-	this.mostrarModal=function(msg){
+	this.mostrarModal=function(titulo,msg){
 		$('#cT').remove();
 		$('#cM').remove();		
-		var cadt="<div id='cT'>"+titulo+"</div>";
-		var cadmsg="<p id='cM'>"+msg+"</p>";
-		$('#titulo').append(cadt);
+		var cadena="<div id='cT'>"+titulo+"</div>";
+		cadmsg="<p id='cM'>"+msg+"</p>";
+		$('#titulo').append(cadena);
 		$('#contenidoModal').append(cadmsg);
 		$('#miModal').modal("show");
 	}

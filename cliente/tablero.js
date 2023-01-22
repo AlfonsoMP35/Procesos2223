@@ -27,17 +27,7 @@
 			computerCells[j].self = this;
 			computerCells[j].addEventListener('click', this.shootListener, false);
 		}
-
-        var playerRoster = document.querySelector('.fleet-roster').querySelectorAll('li');
-		for (var i = 0; i < playerRoster.length; i++) {
-			playerRoster[i].self = this;
-			playerRoster[i].addEventListener('click', this.rosterListener, false);
-		}
-
-
-
     }
-
     //manejadores (click en el tablero propio, click en el tablero rival)
     //updateCell (actualiza las celdas)
 
@@ -154,7 +144,7 @@
 	 	cadena=cadena+'<h4>Barcos</h4><div id="flota"></div></div><div class="grid-container"><h2>Tu flota</h2>';
 		cadena=cadena+'<div class="grid human-player"></div></div><div class="grid-container">';
 		cadena=cadena+'<h2>Flota enemiga</h2><div class="grid computer-player"></div></div></div>';
-		$('#ancla').append(cadena);
+		$('#inicio').append(cadena);
 		this.crearGrid();
 	}
 }
